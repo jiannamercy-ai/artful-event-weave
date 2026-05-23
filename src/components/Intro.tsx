@@ -7,13 +7,13 @@ export function Intro({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<"line" | "name" | "events" | "lift" | "done">("line");
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("name"), 600);
-    const t2 = setTimeout(() => setPhase("events"), 600 + 1500);
-    const t3 = setTimeout(() => setPhase("lift"), 600 + 1500 + 2000);
+    const t1 = setTimeout(() => setPhase("name"), 200);
+    const t2 = setTimeout(() => setPhase("events"), 200 + 600);
+    const t3 = setTimeout(() => setPhase("lift"), 200 + 600 + 700);
     const t4 = setTimeout(() => {
       setPhase("done");
       onDone();
-    }, 600 + 1500 + 2000 + 1400);
+    }, 200 + 600 + 700 + 700);
     return () => [t1, t2, t3, t4].forEach(clearTimeout);
   }, [onDone]);
 
