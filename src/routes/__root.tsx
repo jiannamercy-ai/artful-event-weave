@@ -116,6 +116,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAdmin = pathname.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -125,15 +127,17 @@ function RootComponent() {
       >
         Skip to main content
       </a>
-      <CustomCursor />
-      <ScrollProgress />
-      <Navbar />
+      {!isAdmin && <CustomCursor />}
+      {!isAdmin && <ScrollProgress />}
+      {!isAdmin && <Navbar />}
       <main id="main" className="relative">
         <Outlet />
       </main>
-      <Footer />
-      <ConciergeIndicator />
-      <QuickInquiry />
+      {!isAdmin && <Footer />}
+      {!isAdmin && <ConciergeIndicator />}
+      {!isAdmin && <QuickInquiry />}
+      <AdminTrigger />
+      <Toaster />
     </QueryClientProvider>
   );
 }
