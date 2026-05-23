@@ -58,7 +58,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
                 ? { y: "-42vh", x: "-42vw", scale: 0.28 }
                 : { y: 0, x: 0, scale: 1 }
             }
-            transition={{ duration: 1.4, ease: [0.25, 0.1, 0.25, 1] }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <div className="flex">
               {LETTERS.map((l, i) => {
