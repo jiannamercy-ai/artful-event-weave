@@ -3,65 +3,54 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
-  useRouter,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { CustomCursor } from "@/components/CustomCursor";
+import { ConciergeIndicator } from "@/components/ConciergeIndicator";
+import { QuickInquiry } from "@/components/QuickInquiry";
+import { ScrollProgress } from "@/components/ScrollProgress";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-dvh items-center justify-center bg-espresso px-4 text-cream">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+        <p className="font-serif text-[120px] leading-none text-[var(--amber-gold)]">404</p>
+        <span className="gold-rule mt-2 mb-6" />
+        <h1 className="font-serif text-3xl">This page has drifted away.</h1>
+        <p className="mt-3 text-sm text-[color:var(--champagne)]/70">
+          Like a guest who wandered to the wrong ballroom — let us guide you back.
         </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+        <Link
+          to="/"
+          className="mt-8 inline-flex items-center justify-center bg-[var(--amber-gold)] px-6 py-3 text-sm uppercase tracking-[0.2em] text-[var(--espresso)] gold-sweep"
+        >
+          Return Home
+        </Link>
       </div>
     </div>
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
-  const router = useRouter();
-
+function ErrorComponent({ reset }: { error: Error; reset: () => void }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-dvh items-center justify-center bg-[var(--cream)] px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+        <span className="gold-rule mb-6" />
+        <h1 className="font-serif text-2xl">A small disturbance.</h1>
+        <p className="mt-3 text-sm text-[var(--taupe)]">
+          Something didn't render as planned. Refreshing usually resolves it.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
-        </div>
+        <button
+          onClick={reset}
+          className="mt-6 bg-[var(--amber-gold)] px-6 py-3 text-sm uppercase tracking-[0.2em] text-[var(--espresso)] gold-sweep"
+        >
+          Try again
+        </button>
       </div>
     </div>
   );
@@ -72,19 +61,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Dencyah Events — Curators of Refined Experiences" },
+      {
+        name: "description",
+        content:
+          "Dencyah Events designs luxury weddings, corporate galas and private celebrations across the Western-Nyanza region. Handled. Delivered. Celebrated.",
+      },
+      { property: "og:title", content: "Dencyah Events — Curators of Refined Experiences" },
+      {
+        property: "og:description",
+        content: "Luxury event design, planning and production. Every detail considered, refined, executed.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap",
       },
     ],
   }),
@@ -113,7 +109,21 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:bg-[var(--amber-gold)] focus:px-4 focus:py-2 focus:text-[var(--espresso)]"
+      >
+        Skip to main content
+      </a>
+      <CustomCursor />
+      <ScrollProgress />
+      <Navbar />
+      <main id="main" className="relative">
+        <Outlet />
+      </main>
+      <Footer />
+      <ConciergeIndicator />
+      <QuickInquiry />
     </QueryClientProvider>
   );
 }
