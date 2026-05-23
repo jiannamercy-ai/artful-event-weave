@@ -73,7 +73,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
                         ? { opacity: 0, x: offset, filter: "blur(8px)" }
                         : { opacity: 1, x: 0, filter: "blur(0px)" }
                     }
-                    transition={{ duration: 0.7, delay: 0.1 * i, ease: [0.25, 0.1, 0.25, 1] }}
+                    transition={{ duration: 0.4, delay: 0.04 * i, ease: [0.25, 0.1, 0.25, 1] }}
                     className="font-serif font-semibold text-[var(--amber-gold)] text-[48px] md:text-[80px] leading-none"
                     style={{ letterSpacing: "0.05em", textShadow: "0 0 24px rgba(200,169,126,0.4)" }}
                   >
