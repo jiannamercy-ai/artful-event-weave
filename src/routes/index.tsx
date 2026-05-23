@@ -94,7 +94,7 @@ function Hero({ ready }: { ready: boolean }) {
     >
       <motion.div
         initial={{ opacity: 0, filter: "blur(12px)" }}
-        animate={ready ? { opacity: 1, filter: "blur(0px)" } : {}}
+        animate={{ opacity: 1, filter: "blur(0px)" }}
         transition={{ duration: 1.4, ease: EASE }}
         className="absolute inset-0"
       >
@@ -127,14 +127,14 @@ function Hero({ ready }: { ready: boolean }) {
       <div className="relative z-10 mx-auto flex min-h-dvh max-w-[1300px] flex-col items-start justify-center px-6 md:px-14 pt-32 pb-28">
         <motion.span
           initial={{ opacity: 0, y: 20 }}
-          animate={ready ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: EASE, delay: 0.2 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: EASE, delay: 0.05 }}
           className="gold-rule"
         />
         <motion.h1
           initial={{ opacity: 0, filter: "blur(12px)", y: 24 }}
-          animate={ready ? { opacity: 1, filter: "blur(0px)", y: 0 } : {}}
-          transition={{ duration: 1.2, ease: EASE, delay: 0.4 }}
+          animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+          transition={{ duration: 1.2, ease: EASE, delay: 0.1 }}
           className="font-serif text-[clamp(2.5rem,6.5vw,5.5rem)] leading-[1.04] mt-6 max-w-4xl"
         >
           Where Vision Meets
@@ -144,8 +144,8 @@ function Hero({ ready }: { ready: boolean }) {
 
         <motion.p
           initial={{ opacity: 0, filter: "blur(10px)", y: 24 }}
-          animate={ready ? { opacity: 1, filter: "blur(0px)", y: 0 } : {}}
-          transition={{ duration: 1, ease: EASE, delay: 0.9 }}
+          animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+          transition={{ duration: 1, ease: EASE, delay: 0.2 }}
           className="mt-7 max-w-xl text-base md:text-lg text-[var(--champagne)]/90 font-light"
         >
           From intimate celebrations to grand galas, we craft moments that linger long after the last guest departs.
@@ -153,8 +153,8 @@ function Hero({ ready }: { ready: boolean }) {
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={ready ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9, ease: EASE, delay: 1.3 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: EASE, delay: 0.3 }}
           className="mt-10 flex flex-wrap gap-4"
         >
           <a
@@ -174,8 +174,8 @@ function Hero({ ready }: { ready: boolean }) {
         {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={ready ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: EASE, delay: 1.6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: EASE, delay: 0.4 }}
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 w-full max-w-3xl"
         >
           {[
@@ -194,8 +194,8 @@ function Hero({ ready }: { ready: boolean }) {
         {/* Trust strip */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={ready ? { opacity: 1 } : {}}
-          transition={{ duration: 1, delay: 1.9 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
           className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] uppercase tracking-[0.22em] text-[var(--champagne)]/70"
         >
           {[
@@ -644,7 +644,7 @@ function TestimonialCard({
             key={s}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={showRest ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.2 + s * 0.1 }}
+            transition={{ delay: 0.05 + s * 0.1 }}
           >
             <Star className="h-3.5 w-3.5 fill-[var(--amber-gold)] text-[var(--amber-gold)]" />
           </motion.span>
