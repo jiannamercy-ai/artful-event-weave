@@ -61,18 +61,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Dencyah Events — Curators of Refined Experiences" },
+      { title: "Dencyah Events" },
       {
         name: "description",
         content:
           "Dencyah Events designs luxury weddings, corporate galas and private celebrations across the Western-Nyanza region. Handled. Delivered. Celebrated.",
       },
-      { property: "og:title", content: "Dencyah Events — Curators of Refined Experiences" },
+      { property: "og:title", content: "Dencyah Events" },
       {
         property: "og:description",
         content: "Luxury event design, planning and production. Every detail considered, refined, executed.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:title", content: "Dencyah Events" },
+      { name: "description", content: "A luxury event planning website offering a seamless, art-directed digital experience for Dencyah Events." },
+      { property: "og:description", content: "A luxury event planning website offering a seamless, art-directed digital experience for Dencyah Events." },
+      { name: "twitter:description", content: "A luxury event planning website offering a seamless, art-directed digital experience for Dencyah Events." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5040249c-83a2-471c-84c4-20c77d086bc6/id-preview-867224d2--82ce68a7-2fa2-4c5f-b4d2-65fb13c6bdf6.lovable.app-1779560992117.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5040249c-83a2-471c-84c4-20c77d086bc6/id-preview-867224d2--82ce68a7-2fa2-4c5f-b4d2-65fb13c6bdf6.lovable.app-1779560992117.png" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
