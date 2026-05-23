@@ -96,7 +96,7 @@ function ServiceDetail() {
 
       <section className="px-6 py-20 md:py-28 max-w-[760px] mx-auto">
         <div className="space-y-6 text-lg leading-relaxed text-[var(--espresso)]/85">
-          {detail.body.map((p, i) => (
+          {detail.body.map((p: string, i: number) => (
             <p key={i}>{p}</p>
           ))}
         </div>
