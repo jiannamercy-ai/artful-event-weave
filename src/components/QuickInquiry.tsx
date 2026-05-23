@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, X } from "lucide-react";
+import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+const schema = z.object({
+  name: z.string().trim().min(1, "Name required").max(100),
+  contact: z.string().trim().min(3, "Phone or email required").max(255),
+});
 
 export function QuickInquiry() {
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > window.innerHeight * 0.8);
@@ -13,6 +24,29 @@ export function QuickInquiry() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const parsed = schema.safeParse({ name, contact });
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0].message);
+      return;
+    }
+    setBusy(true);
+    const isEmail = /@/.test(parsed.data.contact);
+    const { error } = await supabase.from("inquiries").insert({
+      name: parsed.data.name,
+      email: isEmail ? parsed.data.contact : null,
+      phone: isEmail ? null : parsed.data.contact,
+      message: "Quick inquiry from floating button.",
+    });
+    setBusy(false);
+    if (error) {
+      toast.error("Could not send. Please try again.");
+      return;
+    }
+    setSent(true);
+  };
 
   return (
     <>
@@ -70,21 +104,32 @@ export function QuickInquiry() {
                   <div className="mt-4 h-px w-12 bg-[var(--amber-gold)]" />
                 </div>
               ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setSent(true);
-                  }}
-                  className="mt-6 space-y-5"
-                >
+                <form onSubmit={submit} className="mt-6 space-y-5">
                   <div className="thread-field border-b border-[var(--border)]">
-                    <input required placeholder="Your name" className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
+                    <input
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      maxLength={100}
+                      placeholder="Your name"
+                      className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
+                    />
                   </div>
                   <div className="thread-field border-b border-[var(--border)]">
-                    <input required placeholder="Phone or email" className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
+                    <input
+                      required
+                      value={contact}
+                      onChange={(e) => setContact(e.target.value)}
+                      maxLength={255}
+                      placeholder="Phone or email"
+                      className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
+                    />
                   </div>
-                  <button className="w-full bg-[var(--amber-gold)] py-3 text-sm uppercase tracking-[0.22em] text-[var(--espresso)] gold-sweep">
-                    I'm Ready to Talk
+                  <button
+                    disabled={busy}
+                    className="w-full bg-[var(--amber-gold)] py-3 text-sm uppercase tracking-[0.22em] text-[var(--espresso)] gold-sweep disabled:opacity-60"
+                  >
+                    {busy ? "Sending…" : "I'm Ready to Talk"}
                   </button>
                 </form>
               )}
