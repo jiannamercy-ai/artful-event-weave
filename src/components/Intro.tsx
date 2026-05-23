@@ -7,13 +7,13 @@ export function Intro({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<"line" | "name" | "events" | "lift" | "done">("line");
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("name"), 600);
-    const t2 = setTimeout(() => setPhase("events"), 600 + 1500);
-    const t3 = setTimeout(() => setPhase("lift"), 600 + 1500 + 2000);
+    const t1 = setTimeout(() => setPhase("name"), 200);
+    const t2 = setTimeout(() => setPhase("events"), 200 + 600);
+    const t3 = setTimeout(() => setPhase("lift"), 200 + 600 + 700);
     const t4 = setTimeout(() => {
       setPhase("done");
       onDone();
-    }, 600 + 1500 + 2000 + 1400);
+    }, 200 + 600 + 700 + 700);
     return () => [t1, t2, t3, t4].forEach(clearTimeout);
   }, [onDone]);
 
@@ -58,7 +58,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
                 ? { y: "-42vh", x: "-42vw", scale: 0.28 }
                 : { y: 0, x: 0, scale: 1 }
             }
-            transition={{ duration: 1.4, ease: [0.25, 0.1, 0.25, 1] }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <div className="flex">
               {LETTERS.map((l, i) => {
@@ -73,7 +73,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
                         ? { opacity: 0, x: offset, filter: "blur(8px)" }
                         : { opacity: 1, x: 0, filter: "blur(0px)" }
                     }
-                    transition={{ duration: 0.7, delay: 0.1 * i, ease: [0.25, 0.1, 0.25, 1] }}
+                    transition={{ duration: 0.4, delay: 0.04 * i, ease: [0.25, 0.1, 0.25, 1] }}
                     className="font-serif font-semibold text-[var(--amber-gold)] text-[48px] md:text-[80px] leading-none"
                     style={{ letterSpacing: "0.05em", textShadow: "0 0 24px rgba(200,169,126,0.4)" }}
                   >
