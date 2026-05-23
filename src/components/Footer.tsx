@@ -1,7 +1,17 @@
-import { Instagram, Facebook, MessageCircle } from "lucide-react";
+import { Instagram, Facebook, MessageCircle, Mail } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useSiteSettings, instagramUrl, whatsappUrl, emailUrl } from "@/lib/site";
 
 export function Footer() {
+  const { data: s } = useSiteSettings();
+
+  const socials = [
+    { Icon: Instagram, href: instagramUrl(s?.instagram ?? ""), label: "Instagram" },
+    { Icon: MessageCircle, href: whatsappUrl(s?.whatsapp ?? "", "Hello Dencyah Events — I'd like to talk."), label: "WhatsApp" },
+    { Icon: Mail, href: emailUrl(s?.email ?? "", "Inquiry — Dencyah Events"), label: "Email" },
+    { Icon: Facebook, href: "#", label: "Facebook" },
+  ];
+
   return (
     <footer className="bg-[var(--espresso)] text-[var(--cream)] pt-20 pb-10 px-6">
       <div className="mx-auto max-w-[1100px] text-center">
@@ -16,14 +26,10 @@ export function Footer() {
 
         <div className="mx-auto mt-6 h-px w-[60px] bg-[var(--amber-gold)]" />
 
-        <p className="mt-6 font-light text-[var(--champagne)]/80">Curators of refined experiences.</p>
+        <p className="mt-6 font-light text-[var(--champagne)]/80">{s?.tagline ?? "Curators of refined experiences."}</p>
 
         <div className="mt-10 flex justify-center gap-4">
-          {[
-            { Icon: Instagram, href: "https://instagram.com/dencyahevents", label: "Instagram" },
-            { Icon: Facebook, href: "#", label: "Facebook" },
-            { Icon: MessageCircle, href: "https://wa.me/254726765010", label: "WhatsApp" },
-          ].map(({ Icon, href, label }) => (
+          {socials.map(({ Icon, href, label }) => (
             <a
               key={label}
               href={href}
@@ -37,7 +43,15 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs uppercase tracking-[0.2em]">
+        {s && (
+          <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-1 text-[11px] text-[var(--champagne)]/70">
+            <a href={emailUrl(s.email)} className="hover:text-[var(--amber-gold)]">{s.email}</a>
+            <span>·</span>
+            <a href={whatsappUrl(s.whatsapp)} target="_blank" rel="noreferrer" className="hover:text-[var(--amber-gold)]">{s.whatsapp}</a>
+          </div>
+        )}
+
+        <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs uppercase tracking-[0.2em]">
           <Link to="/privacy" className="text-[var(--cream)]/80 hover:text-[var(--amber-gold)]">
             Privacy Policy
           </Link>
@@ -48,7 +62,7 @@ export function Footer() {
         </div>
 
         <p className="mt-10 text-xs text-[var(--taupe)]">
-          © {new Date().getFullYear()} Dencyah Events. All rights reserved. · Handled. Delivered. Celebrated.
+          © {new Date().getFullYear()} Dencyah Events. All rights reserved. · {s?.footer_text ?? "Handled. Delivered. Celebrated."}
         </p>
       </div>
     </footer>
