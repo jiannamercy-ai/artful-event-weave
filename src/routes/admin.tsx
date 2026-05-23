@@ -23,7 +23,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
 
-const NAV = [
+const NAV: Array<{ to: string; label: string; Icon: any; exact?: boolean }> = [
   { to: "/admin", label: "Dashboard", Icon: LayoutDashboard, exact: true },
   { to: "/admin/sections", label: "Page Copy", Icon: Type },
   { to: "/admin/services", label: "Services", Icon: Sparkles },
@@ -32,7 +32,7 @@ const NAV = [
   { to: "/admin/testimonials", label: "Testimonials", Icon: MessageSquareQuote },
   { to: "/admin/inquiries", label: "Inquiries", Icon: Inbox },
   { to: "/admin/settings", label: "Settings", Icon: Settings },
-] as const;
+];
 
 function AdminLayout() {
   const navigate = useNavigate();
