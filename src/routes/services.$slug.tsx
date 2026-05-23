@@ -101,9 +101,9 @@ function ServiceDetail() {
           ))}
         </div>
         <div className="mt-12 flex flex-wrap gap-4">
-          <Link to="/" hash="contact" className="bg-[var(--amber-gold)] text-[var(--espresso)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] gold-sweep">
+          <a href="/#contact" className="bg-[var(--amber-gold)] text-[var(--espresso)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] gold-sweep">
             Begin Your Vision
-          </Link>
+          </a>
           <Link to="/" className="border border-[var(--amber-gold)] text-[var(--amber-gold)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)] transition-colors">
             ← All Services
           </Link>
