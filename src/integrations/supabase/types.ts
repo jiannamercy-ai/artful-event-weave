@@ -14,7 +14,219 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      inquiries: {
+        Row: {
+          created_at: string
+          email: string | null
+          event_date: string | null
+          event_type: string | null
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          read: boolean
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          event_date?: string | null
+          event_type?: string | null
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          read?: boolean
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          event_date?: string | null
+          event_type?: string | null
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          read?: boolean
+        }
+        Relationships: []
+      }
+      portfolio_items: {
+        Row: {
+          chapter: string | null
+          created_at: string
+          gallery: Json
+          id: string
+          image_url: string | null
+          name: string
+          slug: string
+          sort_order: number
+          story: string | null
+        }
+        Insert: {
+          chapter?: string | null
+          created_at?: string
+          gallery?: Json
+          id?: string
+          image_url?: string | null
+          name: string
+          slug: string
+          sort_order?: number
+          story?: string | null
+        }
+        Update: {
+          chapter?: string | null
+          created_at?: string
+          gallery?: Json
+          id?: string
+          image_url?: string | null
+          name?: string
+          slug?: string
+          sort_order?: number
+          story?: string | null
+        }
+        Relationships: []
+      }
+      sections: {
+        Row: {
+          content: Json
+          key: string
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          key: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          line: string | null
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          line?: string | null
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          line?: string | null
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          email: string
+          footer_text: string
+          id: number
+          instagram: string
+          tagline: string
+          updated_at: string
+          whatsapp: string
+        }
+        Insert: {
+          email?: string
+          footer_text?: string
+          id?: number
+          instagram?: string
+          tagline?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Update: {
+          email?: string
+          footer_text?: string
+          id?: number
+          instagram?: string
+          tagline?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          bio: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          name: string
+          role: string | null
+          sort_order: number
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name: string
+          role?: string | null
+          sort_order?: number
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+          role?: string | null
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          quote: string
+          rating: number
+          role: string | null
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          quote: string
+          rating?: number
+          role?: string | null
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          quote?: string
+          rating?: number
+          role?: string | null
+          sort_order?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
