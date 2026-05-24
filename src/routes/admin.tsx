@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -15,11 +15,6 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
-  beforeLoad: () => {
-    if (typeof window !== "undefined" && !sessionStorage.getItem("dencyah_admin")) {
-      throw redirect({ to: "/" });
-    }
-  },
   component: AdminLayout,
 });
 
@@ -40,12 +35,31 @@ function AdminLayout() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    // Guard once mounted (SSR-safe check already done in beforeLoad)
-    if (!sessionStorage.getItem("dencyah_admin")) {
-      navigate({ to: "/" });
-    } else {
+    let cancelled = false;
+    (async () => {
+      // Real auth gate — verify a live Supabase session.
+      // sessionStorage flag alone is trivially spoofable in DevTools.
+      const { data, error } = await supabase.auth.getSession();
+      if (cancelled) return;
+      if (error || !data.session) {
+        sessionStorage.removeItem("dencyah_admin");
+        navigate({ to: "/" });
+        return;
+      }
+      sessionStorage.setItem("dencyah_admin", "1");
       setReady(true);
-    }
+    })();
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (!session) {
+        sessionStorage.removeItem("dencyah_admin");
+        navigate({ to: "/" });
+      }
+    });
+    return () => {
+      cancelled = true;
+      sub.subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const logout = async () => {
