@@ -13,10 +13,25 @@ import {
   Shield,
   Globe,
   Newspaper,
+  Instagram,
+  MessageCircle,
+  Mail,
 } from "lucide-react";
 
 import { Intro } from "@/components/Intro";
 import { GoldRule } from "@/components/GoldRule";
+import {
+  useServices,
+  usePortfolio,
+  useTeam,
+  useTestimonials,
+  useSiteSettings,
+  instagramUrl,
+  whatsappUrl,
+  emailUrl,
+} from "@/lib/site";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 import heroImg from "@/assets/hero.jpg";
 import aboutImg from "@/assets/about.jpg";
@@ -101,13 +116,13 @@ function Hero({ ready }: { ready: boolean }) {
         <img
           src={heroImg}
           alt="A luxury tented reception lit by golden candle light"
+          decoding="async"
           className="h-full w-full object-cover animate-breathe"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--espresso)]/40 via-[var(--espresso)]/55 to-[var(--espresso)]" />
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--espresso)]/70 via-transparent to-[var(--espresso)]/60" />
       </motion.div>
 
-      {/* champagne particles */}
       {ready &&
         Array.from({ length: 14 }).map((_, i) => (
           <span
@@ -171,7 +186,6 @@ function Hero({ ready }: { ready: boolean }) {
           </a>
         </motion.div>
 
-        {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -191,7 +205,6 @@ function Hero({ ready }: { ready: boolean }) {
           ))}
         </motion.div>
 
-        {/* Trust strip */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -241,8 +254,6 @@ function Counter({ to, suffix = "", active }: { to: number; suffix?: string; act
   );
 }
 
-/* ─────────────────── Curtain divider ─────────────────── */
-
 function CurtainDivider() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -273,10 +284,10 @@ function About() {
             src={aboutImg}
             alt="A grand banquet hall illuminated by warm chandelier light"
             loading="lazy"
+            decoding="async"
             style={{ y }}
             className="absolute inset-0 h-[110%] w-full object-cover"
           />
-          {/* silk cloth reveal */}
           <motion.div
             initial={{ y: 0 }}
             whileInView={{ y: "-100%" }}
@@ -324,16 +335,28 @@ function About() {
 
 /* ───────────────────────── Services ───────────────────────── */
 
-const SERVICES = [
-  { slug: "luxury-weddings", name: "Luxury Weddings", line: "The day you remember in still frames.", img: e1 },
-  { slug: "corporate-galas", name: "Corporate Galas & Launches", line: "Brand stories, told in a single evening.", img: aboutImg },
-  { slug: "private-celebrations", name: "Private Celebrations", line: "Quiet milestones, exquisitely held.", img: e4 },
-  { slug: "destination-events", name: "Destination Events", line: "Wherever you imagine — we arrive first.", img: heroImg },
-  { slug: "floral-decor", name: "Floral & Décor Design", line: "Living architecture, in bloom.", img: e3 },
-  { slug: "event-production", name: "Event Production & Management", line: "The orchestra you never see — only feel.", img: e2 },
+const FALLBACK_SERVICES = [
+  { slug: "luxury-weddings", name: "Luxury Weddings", line: "The day you remember in still frames.", image_url: null as string | null, img: e1 },
+  { slug: "corporate-galas", name: "Corporate Galas & Launches", line: "Brand stories, told in a single evening.", image_url: null, img: aboutImg },
+  { slug: "private-celebrations", name: "Private Celebrations", line: "Quiet milestones, exquisitely held.", image_url: null, img: e4 },
+  { slug: "destination-events", name: "Destination Events", line: "Wherever you imagine — we arrive first.", image_url: null, img: heroImg },
+  { slug: "floral-decor", name: "Floral & Décor Design", line: "Living architecture, in bloom.", image_url: null, img: e3 },
+  { slug: "event-production", name: "Event Production & Management", line: "The orchestra you never see — only feel.", image_url: null, img: e2 },
 ];
 
 function Services() {
+  const { data } = useServices();
+  const fallbackImgs = [e1, aboutImg, e4, heroImg, e3, e2];
+  const items =
+    data && data.length > 0
+      ? data.map((s, i) => ({
+          slug: s.slug,
+          name: s.name,
+          line: s.line ?? "",
+          img: s.image_url || fallbackImgs[i % fallbackImgs.length],
+        }))
+      : FALLBACK_SERVICES.map((s) => ({ slug: s.slug, name: s.name, line: s.line, img: s.img }));
+
   return (
     <section id="services" className="bg-[var(--cream)] py-24 md:py-32 px-6">
       <div className="mx-auto max-w-[1300px]">
@@ -346,22 +369,21 @@ function Services() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {SERVICES.map((s, i) => (
+          {items.map((s, i) => (
             <motion.article
               key={s.slug}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.8, delay: i * 0.12, ease: EASE }}
+              transition={{ duration: 0.8, delay: Math.min(i, 5) * 0.1, ease: EASE }}
               className="group relative bg-white shadow-[0_8px_30px_-15px_rgba(60,42,36,0.25)] overflow-hidden"
               style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 40%, transparent)" }}
             >
-              {/* card top thread */}
               <motion.span
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.5, delay: i * 0.12 + 0.1 }}
+                transition={{ duration: 0.5, delay: Math.min(i, 5) * 0.1 + 0.1 }}
                 style={{ transformOrigin: "left" }}
                 className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--amber-gold)] z-10"
               />
@@ -370,6 +392,7 @@ function Services() {
                   src={s.img}
                   alt={s.name}
                   loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                 />
               </div>
@@ -394,7 +417,7 @@ function Services() {
 
 /* ─────────────────── Portfolio (dark) ─────────────────── */
 
-const PORTFOLIO = [
+const FALLBACK_PORTFOLIO = [
   { slug: "pearl-wedding", name: "The Pearl Wedding", img: e1 },
   { slug: "scarlet-banquet", name: "The Scarlet Banquet", img: e2 },
   { slug: "rose-pavilion", name: "The Rose Pavilion", img: e3 },
@@ -404,13 +427,23 @@ const PORTFOLIO = [
 ];
 
 function Portfolio() {
+  const { data } = usePortfolio();
+  const fallbackImgs = [e1, e2, e3, e4, heroImg, aboutImg];
+  const items =
+    data && data.length > 0
+      ? data.map((p, i) => ({
+          slug: p.slug,
+          name: p.name,
+          img: p.image_url || fallbackImgs[i % fallbackImgs.length],
+        }))
+      : FALLBACK_PORTFOLIO;
+
   const stripRef = useRef<HTMLDivElement>(null);
   const scroll = (dir: 1 | -1) => {
     stripRef.current?.scrollBy({ left: dir * 440, behavior: "smooth" });
   };
   return (
     <section id="portfolio" className="relative bg-[var(--espresso)] text-[var(--cream)] py-24 md:py-32 overflow-hidden">
-      {/* particle dissolve top */}
       <div className="absolute -top-px left-0 right-0 h-24 bg-gradient-to-b from-[var(--cream)] to-transparent opacity-10 pointer-events-none" />
       <div className="px-6">
         <div className="mx-auto max-w-[1300px] text-center mb-14">
@@ -440,29 +473,27 @@ function Portfolio() {
           ref={stripRef}
           className="no-scrollbar flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory px-6 md:px-16 pb-4"
         >
-          {PORTFOLIO.map((p) => (
+          {items.map((p) => (
             <Link
               key={p.slug}
               to="/portfolio/$slug"
               params={{ slug: p.slug }}
-              className="group relative flex-shrink-0 snap-start w-[80vw] max-w-[400px] h-[460px] md:h-[520px] overflow-hidden"
+              className="group relative flex-shrink-0 snap-start w-[80vw] sm:w-[60vw] md:w-[400px] h-[420px] sm:h-[460px] md:h-[520px] overflow-hidden"
             >
               <img
                 src={p.img}
                 alt={p.name}
                 loading="lazy"
+                decoding="async"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[var(--espresso)] via-[var(--espresso)]/30 to-transparent" />
-
-              {/* amber border trace */}
               <span className="pointer-events-none absolute inset-2">
                 <span className="absolute top-0 left-0 h-px w-0 bg-[var(--amber-gold)] transition-all duration-300 group-hover:w-full" />
                 <span className="absolute top-0 right-0 w-px h-0 bg-[var(--amber-gold)] transition-all duration-300 delay-200 group-hover:h-full" />
                 <span className="absolute bottom-0 right-0 h-px w-0 bg-[var(--amber-gold)] transition-all duration-300 delay-[400ms] group-hover:w-full" />
                 <span className="absolute bottom-0 left-0 w-px h-0 bg-[var(--amber-gold)] transition-all duration-300 delay-[600ms] group-hover:h-full" />
               </span>
-
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <h3 className="font-serif text-2xl text-[var(--cream)]">{p.name}</h3>
                 <span className="mt-2 inline-block opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-xs uppercase tracking-[0.22em] text-[var(--amber-gold)] thread-link">
@@ -479,7 +510,7 @@ function Portfolio() {
 
 /* ───────────────────────── Team ───────────────────────── */
 
-const TEAM = [
+const FALLBACK_TEAM = [
   { name: "Sarah", role: "The Vision Weaver", img: t1 },
   { name: "Michael", role: "The Calm Architect", img: t2 },
   { name: "Amara", role: "The Story Director", img: t3 },
@@ -487,6 +518,17 @@ const TEAM = [
 ];
 
 function Team() {
+  const { data } = useTeam();
+  const fallbackImgs = [t1, t2, t3, t4];
+  const items =
+    data && data.length > 0
+      ? data.slice(0, 8).map((m, i) => ({
+          name: m.name,
+          role: m.role ?? "",
+          img: m.image_url || fallbackImgs[i % fallbackImgs.length],
+        }))
+      : FALLBACK_TEAM;
+
   return (
     <section id="team" className="bg-[var(--cream)] py-24 md:py-32 px-6">
       <div className="mx-auto max-w-[1300px]">
@@ -497,13 +539,13 @@ function Team() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-          {TEAM.map((m, i) => (
+          {items.map((m, i) => (
             <motion.div
-              key={m.name}
+              key={`${m.name}-${i}`}
               initial={{ opacity: 0, scale: 0.5 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.8, delay: i * 0.2, ease: EASE }}
+              transition={{ duration: 0.8, delay: Math.min(i, 3) * 0.15, ease: EASE }}
               className="text-center"
             >
               <div className="relative aspect-[4/5] overflow-hidden bg-[var(--espresso)]/5">
@@ -511,6 +553,7 @@ function Team() {
                   src={m.img}
                   alt={`${m.name}, ${m.role} at Dencyah Events`}
                   loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover"
                   style={{ filter: "saturate(0.85)" }}
                 />
@@ -533,7 +576,7 @@ function Team() {
 
 /* ─────────────────── Testimonials (dark) ─────────────────── */
 
-const TESTIMONIALS = [
+const FALLBACK_TESTIMONIALS = [
   {
     quote: "Every detail was poetry — we cried at the cutlery.",
     rest: "The team turned a year of planning into a single perfect evening. We are still being told it was the most beautiful wedding people had ever attended.",
@@ -554,7 +597,23 @@ const TESTIMONIALS = [
   },
 ];
 
+function splitQuote(q: string) {
+  const parts = q.split(/(?<=[.!?])\s+/);
+  const first = parts[0] || q;
+  const rest = parts.slice(1).join(" ");
+  return { first, rest };
+}
+
 function Testimonials() {
+  const { data } = useTestimonials();
+  const items =
+    data && data.length > 0
+      ? data.slice(0, 6).map((t) => {
+          const { first, rest } = splitQuote(t.quote);
+          return { quote: first, rest, name: t.name, role: t.role ?? "" };
+        })
+      : FALLBACK_TESTIMONIALS;
+
   return (
     <section className="bg-[var(--espresso)] text-[var(--cream)] py-24 md:py-32 px-6">
       <div className="mx-auto max-w-[1300px]">
@@ -563,9 +622,9 @@ function Testimonials() {
           <h2 className="font-serif text-[clamp(2rem,4.5vw,3.5rem)]">Words from our clients</h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {TESTIMONIALS.map((t, i) => (
-            <TestimonialCard key={i} {...t} index={i} />
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {items.map((t, i) => (
+            <TestimonialCard key={`${t.name}-${i}`} {...t} index={i} />
           ))}
         </div>
 
@@ -617,7 +676,7 @@ function TestimonialCard({
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.8, delay: index * 0.15 }}
+      transition={{ duration: 0.8, delay: Math.min(index, 5) * 0.12 }}
       className="bg-[var(--espresso-deep)] p-8 md:p-10"
       style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 35%, transparent)" }}
     >
@@ -667,8 +726,45 @@ function TestimonialCard({
 /* ───────────────────────── Contact ───────────────────────── */
 
 function Contact() {
+  const { data: s } = useSiteSettings();
   const [sent, setSent] = useState(false);
   const [pulsing, setPulsing] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (busy) return;
+    const fd = new FormData(e.currentTarget);
+    const payload = {
+      name: String(fd.get("name") || "").trim(),
+      email: String(fd.get("email") || "").trim() || null,
+      phone: String(fd.get("phone") || "").trim() || null,
+      event_type: String(fd.get("event_type") || "").trim() || null,
+      message: String(fd.get("message") || "").trim(),
+    };
+    if (!payload.name || !payload.message) {
+      toast.error("Please fill in your name and a short message.");
+      return;
+    }
+    setBusy(true);
+    setPulsing(true);
+    const { error } = await supabase.from("inquiries").insert(payload);
+    setBusy(false);
+    if (error) {
+      setPulsing(false);
+      toast.error("Could not send. Please try again or use WhatsApp.");
+      return;
+    }
+    setTimeout(() => {
+      setSent(true);
+      setPulsing(false);
+    }, 500);
+  };
+
+  const email = s?.email || "hello@dencyahevents.com";
+  const whatsapp = s?.whatsapp || "+254726765010";
+  const instagram = s?.instagram || "dencyahevents";
+
   return (
     <section id="contact" className="bg-[var(--cream)] py-24 md:py-32 px-6">
       <div className="mx-auto max-w-[1100px] grid md:grid-cols-[1.1fr_0.9fr] gap-12 md:gap-16">
@@ -686,14 +782,14 @@ function Contact() {
           <ul className="mt-10 space-y-3 text-sm text-[var(--espresso)]">
             <li className="flex items-center gap-3">
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
-              <a href="mailto:hello@dencyahevents.com" className="thread-link">
-                hello@dencyahevents.com
+              <a href={emailUrl(email, "Inquiry — Dencyah Events")} className="thread-link break-all">
+                {email}
               </a>
             </li>
             <li className="flex items-center gap-3">
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
-              <a href="tel:+254726765010" className="thread-link">
-                0726 765010
+              <a href={whatsappUrl(whatsapp, "Hello Dencyah Events — I'd like to talk.")} target="_blank" rel="noreferrer" className="thread-link">
+                {whatsapp}
               </a>
             </li>
             <li className="flex items-center gap-3">
@@ -705,6 +801,25 @@ function Contact() {
               <span>Western — Nyanza Region</span>
             </li>
           </ul>
+
+          <div className="mt-8 flex gap-3">
+            {[
+              { Icon: Instagram, href: instagramUrl(instagram), label: "Instagram" },
+              { Icon: MessageCircle, href: whatsappUrl(whatsapp, "Hello Dencyah Events — I'd like to talk."), label: "WhatsApp" },
+              { Icon: Mail, href: emailUrl(email, "Inquiry — Dencyah Events"), label: "Email" },
+            ].map(({ Icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={label}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--amber-gold)] text-[var(--amber-gold)] transition-colors hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)]"
+              >
+                <Icon className="h-4 w-4" />
+              </a>
+            ))}
+          </div>
         </div>
 
         <div
@@ -730,38 +845,23 @@ function Contact() {
               <div className="mt-6 mx-auto h-px w-12 bg-[var(--amber-gold)]" />
             </div>
           ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setPulsing(true);
-                setTimeout(() => {
-                  setSent(true);
-                  setPulsing(false);
-                }, 600);
-              }}
-              className="space-y-5"
-            >
-              {[
-                { name: "name", placeholder: "Your name", type: "text" },
-                { name: "email", placeholder: "Email", type: "email" },
-                { name: "phone", placeholder: "Phone", type: "tel" },
-              ].map((f) => (
-                <div key={f.name} className="thread-field border-b border-[var(--border)]">
-                  <input
-                    required
-                    type={f.type}
-                    name={f.name}
-                    placeholder={f.placeholder}
-                    className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
-                  />
-                </div>
-              ))}
+            <form onSubmit={onSubmit} className="space-y-5">
+              <div className="thread-field border-b border-[var(--border)]">
+                <input required type="text" name="name" maxLength={120} placeholder="Your name"
+                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
+              </div>
+              <div className="thread-field border-b border-[var(--border)]">
+                <input type="email" name="email" maxLength={254} placeholder="Email"
+                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
+              </div>
+              <div className="thread-field border-b border-[var(--border)]">
+                <input type="tel" name="phone" maxLength={40} placeholder="Phone"
+                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
+              </div>
 
               <div className="thread-field border-b border-[var(--border)]">
-                <select required defaultValue="" className="w-full bg-transparent py-3 outline-none text-[var(--taupe)]">
-                  <option value="" disabled>
-                    Event Type
-                  </option>
+                <select name="event_type" defaultValue="" className="w-full bg-transparent py-3 outline-none text-[var(--taupe)]">
+                  <option value="" disabled>Event Type</option>
                   <option>Wedding</option>
                   <option>Corporate Gala</option>
                   <option>Private Celebration</option>
@@ -771,21 +871,19 @@ function Contact() {
               </div>
 
               <div className="thread-field border-b border-[var(--border)]">
-                <textarea
-                  required
-                  rows={3}
+                <textarea required name="message" rows={3} maxLength={4000}
                   placeholder="Tell us about the experience you envision..."
-                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] resize-none"
-                />
+                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] resize-none" />
               </div>
 
               <motion.button
                 type="submit"
+                disabled={busy}
                 whileTap={{ scale: 1.05 }}
                 transition={{ duration: 0.4 }}
-                className="w-full gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] py-4 text-xs uppercase tracking-[0.24em] mt-2"
+                className="w-full gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] py-4 text-xs uppercase tracking-[0.24em] mt-2 disabled:opacity-60"
               >
-                Begin Your Vision
+                {busy ? "Sending…" : "Begin Your Vision"}
               </motion.button>
             </form>
           )}
