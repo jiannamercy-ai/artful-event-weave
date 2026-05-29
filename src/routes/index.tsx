@@ -47,16 +47,16 @@ import t4 from "@/assets/team-4.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dencyah Events — Where Vision Meets Exquisite Execution" },
+      { title: "Linchry Events — Design & Delivery of Exceptional Events" },
       {
         name: "description",
         content:
-          "Luxury weddings, corporate galas and private celebrations curated by Dencyah Events. From intimate moments to grand productions — handled, delivered, celebrated.",
+          "From luxury weddings to high-level corporate experiences, Linchry Events transforms spaces into unforgettable environments. Precision, elegance, seamless execution.",
       },
-      { property: "og:title", content: "Dencyah Events — Where Vision Meets Exquisite Execution" },
+      { property: "og:title", content: "Linchry Events — Design & Delivery of Exceptional Events" },
       {
         property: "og:description",
-        content: "Luxury event design and production across the Western-Nyanza region.",
+        content: "We design and deliver exceptional events that feel effortless.",
       },
     ],
   }),
@@ -70,7 +70,7 @@ function Home() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const played = sessionStorage.getItem("dencyahIntroPlayed");
+    const played = sessionStorage.getItem("linchryIntroPlayed");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!played && !reduced) {
       setIntroDone(false);
@@ -78,7 +78,7 @@ function Home() {
   }, []);
 
   const handleIntroDone = () => {
-    sessionStorage.setItem("dencyahIntroPlayed", "true");
+    sessionStorage.setItem("linchryIntroPlayed", "true");
     setIntroDone(true);
   };
 
@@ -86,11 +86,12 @@ function Home() {
     <>
       {!introDone && <Intro onDone={handleIntroDone} />}
       <Hero ready={introDone} />
+      <BrandStrip />
       <CurtainDivider />
-      <About />
       <Services />
-      <Portfolio />
-      <Team />
+      <FeaturedWork />
+      <About />
+      <CorporateWeddingSplit />
       <Testimonials />
       <Contact />
     </>
@@ -152,9 +153,9 @@ function Hero({ ready }: { ready: boolean }) {
           transition={{ duration: 1.2, ease: EASE, delay: 0.1 }}
           className="font-serif text-[clamp(2.5rem,6.5vw,5.5rem)] leading-[1.04] mt-6 max-w-4xl"
         >
-          Where Vision Meets
+          We Design & Deliver
           <br />
-          <em className="italic font-light text-[var(--amber-gold)]">Exquisite</em> Execution
+          <em className="italic font-light text-[var(--amber-gold)]">Exceptional Events</em> That Feel Effortless
         </motion.h1>
 
         <motion.p
@@ -163,7 +164,7 @@ function Hero({ ready }: { ready: boolean }) {
           transition={{ duration: 1, ease: EASE, delay: 0.2 }}
           className="mt-7 max-w-xl text-base md:text-lg text-[var(--champagne)]/90 font-light"
         >
-          From intimate celebrations to grand galas, we craft moments that linger long after the last guest departs.
+          From luxury weddings to high-level corporate experiences, Linchry Events transforms spaces into unforgettable environments — with precision, elegance, and seamless execution.
         </motion.p>
 
         <motion.div
@@ -176,81 +177,33 @@ function Hero({ ready }: { ready: boolean }) {
             href="#portfolio"
             className="gold-sweep border border-[var(--amber-gold)] text-[var(--amber-gold)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)] transition-colors"
           >
-            Explore Our Work
+            View Our Work
           </a>
           <a
             href="#contact"
             className="gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] hover:brightness-95"
           >
-            Begin Your Vision
+            Request a Proposal
           </a>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: EASE, delay: 0.4 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 w-full max-w-3xl"
-        >
-          {[
-            { n: 150, suffix: "+", l: "Events Curated" },
-            { n: 50, suffix: "+", l: "Luxury Celebrations" },
-            { n: 98, suffix: "%", l: "Client Satisfaction" },
-            { n: 8, suffix: "+", l: "Years of Mastery" },
-          ].map((s, i) => (
-            <div key={i} className="flex flex-col">
-              <Counter to={s.n} suffix={s.suffix} active={ready} />
-              <span className="text-[11px] uppercase tracking-[0.22em] text-[var(--champagne)]/70 mt-1">{s.l}</span>
-            </div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] uppercase tracking-[0.22em] text-[var(--champagne)]/70"
-        >
-          {[
-            { Icon: Newspaper, t: "Featured in Luxury Events Magazine" },
-            { Icon: Award, t: "Member, Intl. Event Society" },
-            { Icon: Shield, t: "Fully Insured & Licensed" },
-            { Icon: Globe, t: "Available Worldwide" },
-          ].map(({ Icon, t }, i) => (
-            <span key={i} className="flex items-center gap-2">
-              <Icon className="h-3.5 w-3.5 text-[var(--amber-gold)]" />
-              {t}
-            </span>
-          ))}
         </motion.div>
       </div>
     </section>
   );
 }
 
-function Counter({ to, suffix = "", active }: { to: number; suffix?: string; active: boolean }) {
-  const [n, setN] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-  useEffect(() => {
-    if (!active || !inView) return;
-    const start = performance.now();
-    const dur = 1600;
-    let raf = 0;
-    const step = (t: number) => {
-      const p = Math.min(1, (t - start) / dur);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setN(Math.round(to * eased));
-      if (p < 1) raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [to, active, inView]);
+/* ───────────────────────── Brand Positioning Strip ───────────────────────── */
+
+function BrandStrip() {
   return (
-    <span ref={ref} className="font-serif text-3xl md:text-4xl text-[var(--amber-gold)]">
-      {n}
-      {suffix}
-    </span>
+    <section className="bg-[var(--cream)] py-16 md:py-20 px-6 text-center">
+      <div className="mx-auto max-w-3xl">
+        <h2 className="font-serif text-[clamp(1.75rem,3.5vw,2.5rem)] leading-tight text-[var(--espresso)]">
+          Not just decor. Not just rentals.
+          <br />
+          <em className="italic font-light text-[var(--amber-gold)]">We create complete event experiences.</em>
+        </h2>
+      </div>
+    </section>
   );
 }
 
@@ -269,84 +222,42 @@ function CurtainDivider() {
   );
 }
 
-/* ───────────────────────── About ───────────────────────── */
-
-function About() {
-  const imgRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: imgRef, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
-
-  return (
-    <section id="about" className="relative bg-[var(--cream)] py-24 md:py-32 px-6">
-      <div className="mx-auto max-w-[1200px] grid md:grid-cols-2 gap-12 md:gap-20 items-center">
-        <div ref={imgRef} className="relative aspect-[4/5] overflow-hidden">
-          <motion.img
-            src={aboutImg}
-            alt="A grand banquet hall illuminated by warm chandelier light"
-            loading="lazy"
-            decoding="async"
-            style={{ y }}
-            className="absolute inset-0 h-[110%] w-full object-cover"
-          />
-          <motion.div
-            initial={{ y: 0 }}
-            whileInView={{ y: "-100%" }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 1.4, ease: EASE }}
-            className="absolute inset-0 bg-[var(--cream)]"
-          />
-        </div>
-
-        <div>
-          <GoldRule />
-          <h2 className="font-serif text-[clamp(2rem,4vw,3.25rem)] leading-[1.1] mt-5">
-            Exquisite is not a word.
-            <br />
-            <em className="italic font-light text-[var(--amber-gold)]">It's our standard.</em>
-          </h2>
-          <div className="mt-8 space-y-5 text-[var(--espresso)]/85 leading-relaxed">
-            <p>
-              At Dencyah Events, we don't plan parties. We compose experiences. Every detail — from the weight of the
-              cutlery to the angle of the lighting — is considered, refined, and executed with quiet precision.
-            </p>
-            <p>
-              We've learned that true luxury isn't loud. It's the pause between moments. The breath a guest takes when
-              they first enter a room. The silence before applause. We design for that silence.
-            </p>
-          </div>
-          <ul className="mt-10 grid grid-cols-2 gap-4 text-sm">
-            {[
-              { Icon: Sparkles, t: "Curated Design" },
-              { Icon: CalendarCheck, t: "Precision Planning" },
-              { Icon: Target, t: "Seamless Execution" },
-              { Icon: Heart, t: "Lasting Impressions" },
-            ].map(({ Icon, t }, i) => (
-              <li key={i} className="flex items-center gap-3">
-                <Icon className="h-4 w-4 text-[var(--amber-gold)]" />
-                <span className="text-[var(--espresso)]">{t}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ───────────────────────── Services ───────────────────────── */
 
 const FALLBACK_SERVICES = [
-  { slug: "luxury-weddings", name: "Luxury Weddings", line: "The day you remember in still frames.", image_url: null as string | null, img: e1 },
-  { slug: "corporate-galas", name: "Corporate Galas & Launches", line: "Brand stories, told in a single evening.", image_url: null, img: aboutImg },
-  { slug: "private-celebrations", name: "Private Celebrations", line: "Quiet milestones, exquisitely held.", image_url: null, img: e4 },
-  { slug: "destination-events", name: "Destination Events", line: "Wherever you imagine — we arrive first.", image_url: null, img: heroImg },
-  { slug: "floral-decor", name: "Floral & Décor Design", line: "Living architecture, in bloom.", image_url: null, img: e3 },
-  { slug: "event-production", name: "Event Production & Management", line: "The orchestra you never see — only feel.", image_url: null, img: e2 },
+  { 
+    slug: "event-production", 
+    name: "Event Production", 
+    line: "We handle the technical and structural elements of your event.",
+    image_url: null as string | null, 
+    img: e1 
+  },
+  { 
+    slug: "event-design-styling", 
+    name: "Event Design & Styling", 
+    line: "We create visually cohesive environments that reflect your theme and vision.",
+    image_url: null, 
+    img: e2 
+  },
+  { 
+    slug: "tent-infrastructure", 
+    name: "Tent & Infrastructure Solutions", 
+    line: "High-quality tenting and spatial design solutions for any event.",
+    image_url: null, 
+    img: e3 
+  },
+  { 
+    slug: "premium-rentals", 
+    name: "Premium Event Rentals", 
+    line: "Our inventory supports both aesthetics and function.",
+    image_url: null, 
+    img: e4 
+  },
 ];
 
 function Services() {
   const { data } = useServices();
-  const fallbackImgs = [e1, aboutImg, e4, heroImg, e3, e2];
+  const fallbackImgs = [e1, e2, e3, e4];
   const items =
     data && data.length > 0
       ? data.map((s, i) => ({
@@ -362,20 +273,20 @@ function Services() {
       <div className="mx-auto max-w-[1300px]">
         <div className="text-center mb-16">
           <span className="block mx-auto h-px w-12 bg-[var(--amber-gold)] mb-5" />
-          <h2 className="font-serif text-[clamp(2rem,4.5vw,3.5rem)]">Our Suite of Services</h2>
+          <h2 className="font-serif text-[clamp(2rem,4.5vw,3.5rem)]">What We Do</h2>
           <p className="mt-4 text-[var(--taupe)] max-w-xl mx-auto">
-            Every event type, treated with the same obsession for detail.
+            We provide end-to-end event solutions tailored to your vision, your guests, and your standards.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {items.map((s, i) => (
             <motion.article
               key={s.slug}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.8, delay: Math.min(i, 5) * 0.1, ease: EASE }}
+              transition={{ duration: 0.8, delay: Math.min(i, 3) * 0.1, ease: EASE }}
               className="group relative bg-white shadow-[0_8px_30px_-15px_rgba(60,42,36,0.25)] overflow-hidden"
               style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 40%, transparent)" }}
             >
@@ -383,7 +294,7 @@ function Services() {
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.5, delay: Math.min(i, 5) * 0.1 + 0.1 }}
+                transition={{ duration: 0.5, delay: Math.min(i, 3) * 0.1 + 0.1 }}
                 style={{ transformOrigin: "left" }}
                 className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--amber-gold)] z-10"
               />
@@ -397,25 +308,34 @@ function Services() {
                 />
               </div>
               <div className="p-7">
-                <h3 className="font-serif text-2xl text-[var(--espresso)]">{s.name}</h3>
+                <h3 className="font-serif text-lg text-[var(--espresso)]">{s.name}</h3>
                 <p className="mt-2 text-sm text-[var(--taupe)]">{s.line}</p>
                 <Link
                   to="/services/$slug"
                   params={{ slug: s.slug }}
                   className="mt-5 inline-block thread-link text-xs uppercase tracking-[0.22em] text-[var(--amber-gold)]"
                 >
-                  Discover More →
+                  Learn More →
                 </Link>
               </div>
             </motion.article>
           ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <a
+            href="#explore-services"
+            className="inline-block gold-sweep border border-[var(--amber-gold)] text-[var(--amber-gold)] px-8 py-3.5 text-xs uppercase tracking-[0.24em] hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)] transition-colors"
+          >
+            Explore Services
+          </a>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─────────────────── Portfolio (dark) ─────────────────── */
+/* ───────────────────────── Featured Work ───────────────────────── */
 
 const FALLBACK_PORTFOLIO = [
   { slug: "pearl-wedding", name: "The Pearl Wedding", img: e1 },
@@ -426,7 +346,7 @@ const FALLBACK_PORTFOLIO = [
   { slug: "executive-gala", name: "The Executive Gala", img: aboutImg },
 ];
 
-function Portfolio() {
+function FeaturedWork() {
   const { data } = usePortfolio();
   const fallbackImgs = [e1, e2, e3, e4, heroImg, aboutImg];
   const items =
@@ -442,158 +362,201 @@ function Portfolio() {
   const scroll = (dir: 1 | -1) => {
     stripRef.current?.scrollBy({ left: dir * 440, behavior: "smooth" });
   };
+  
   return (
-    <section id="portfolio" className="relative bg-[var(--espresso)] text-[var(--cream)] py-24 md:py-32 overflow-hidden">
-      <div className="absolute -top-px left-0 right-0 h-24 bg-gradient-to-b from-[var(--cream)] to-transparent opacity-10 pointer-events-none" />
-      <div className="px-6">
-        <div className="mx-auto max-w-[1300px] text-center mb-14">
-          <span className="block mx-auto h-px w-12 bg-[var(--amber-gold)] mb-5" />
-          <h2 className="font-serif text-[clamp(2rem,4.5vw,3.5rem)]">Curated Experiences</h2>
-          <p className="mt-4 text-[var(--champagne)]/70">A glimpse into the rooms we've composed.</p>
-        </div>
-      </div>
-
-      <div className="relative">
-        <button
-          onClick={() => scroll(-1)}
-          aria-label="Previous"
-          className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 h-11 w-11 items-center justify-center bg-[var(--amber-gold)] text-[var(--espresso)] rounded-full"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-        <button
-          onClick={() => scroll(1)}
-          aria-label="Next"
-          className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 h-11 w-11 items-center justify-center bg-[var(--amber-gold)] text-[var(--espresso)] rounded-full"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
-
-        <div
-          ref={stripRef}
-          className="no-scrollbar flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory px-6 md:px-16 pb-4"
-        >
-          {items.map((p) => (
-            <Link
-              key={p.slug}
-              to="/portfolio/$slug"
-              params={{ slug: p.slug }}
-              className="group relative flex-shrink-0 snap-start w-[80vw] sm:w-[60vw] md:w-[400px] h-[420px] sm:h-[460px] md:h-[520px] overflow-hidden"
-            >
-              <img
-                src={p.img}
-                alt={p.name}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--espresso)] via-[var(--espresso)]/30 to-transparent" />
-              <span className="pointer-events-none absolute inset-2">
-                <span className="absolute top-0 left-0 h-px w-0 bg-[var(--amber-gold)] transition-all duration-300 group-hover:w-full" />
-                <span className="absolute top-0 right-0 w-px h-0 bg-[var(--amber-gold)] transition-all duration-300 delay-200 group-hover:h-full" />
-                <span className="absolute bottom-0 right-0 h-px w-0 bg-[var(--amber-gold)] transition-all duration-300 delay-[400ms] group-hover:w-full" />
-                <span className="absolute bottom-0 left-0 w-px h-0 bg-[var(--amber-gold)] transition-all duration-300 delay-[600ms] group-hover:h-full" />
-              </span>
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="font-serif text-2xl text-[var(--cream)]">{p.name}</h3>
-                <span className="mt-2 inline-block opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-xs uppercase tracking-[0.22em] text-[var(--amber-gold)] thread-link">
-                  View Experience →
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────── Team ───────────────────────── */
-
-const FALLBACK_TEAM = [
-  { name: "Sarah", role: "The Vision Weaver", img: t1 },
-  { name: "Michael", role: "The Calm Architect", img: t2 },
-  { name: "Amara", role: "The Story Director", img: t3 },
-  { name: "Daniel", role: "The Floral Composer", img: t4 },
-];
-
-function Team() {
-  const { data } = useTeam();
-  const fallbackImgs = [t1, t2, t3, t4];
-  const items =
-    data && data.length > 0
-      ? data.slice(0, 8).map((m, i) => ({
-          name: m.name,
-          role: m.role ?? "",
-          img: m.image_url || fallbackImgs[i % fallbackImgs.length],
-        }))
-      : FALLBACK_TEAM;
-
-  return (
-    <section id="team" className="bg-[var(--cream)] py-24 md:py-32 px-6">
+    <section id="portfolio" className="relative bg-[var(--cream)] py-24 md:py-32 px-6">
       <div className="mx-auto max-w-[1300px]">
         <div className="text-center mb-16">
           <span className="block mx-auto h-px w-12 bg-[var(--amber-gold)] mb-5" />
-          <h2 className="font-serif text-[clamp(2rem,4.5vw,3.5rem)]">Meet The Curators</h2>
-          <p className="mt-4 text-[var(--taupe)]">The quiet hands behind every detail.</p>
+          <h2 className="font-serif text-[clamp(2rem,4.5vw,3.5rem)]">Selected Experiences</h2>
+          <p className="mt-4 text-[var(--taupe)]">A glimpse into the environments we've designed and executed.</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-          {items.map((m, i) => (
-            <motion.div
-              key={`${m.name}-${i}`}
-              initial={{ opacity: 0, scale: 0.5 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.8, delay: Math.min(i, 3) * 0.15, ease: EASE }}
-              className="text-center"
-            >
-              <div className="relative aspect-[4/5] overflow-hidden bg-[var(--espresso)]/5">
+        <div className="relative">
+          <button
+            onClick={() => scroll(-1)}
+            aria-label="Previous"
+            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-11 w-11 items-center justify-center bg-[var(--amber-gold)] text-[var(--espresso)] rounded-full hover:brightness-95"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            onClick={() => scroll(1)}
+            aria-label="Next"
+            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-11 w-11 items-center justify-center bg-[var(--amber-gold)] text-[var(--espresso)] rounded-full hover:brightness-95"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <div
+            ref={stripRef}
+            className="no-scrollbar flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory px-6 md:px-0 pb-4"
+          >
+            {items.map((p) => (
+              <Link
+                key={p.slug}
+                to="/portfolio/$slug"
+                params={{ slug: p.slug }}
+                className="group relative flex-shrink-0 snap-start w-[80vw] sm:w-[60vw] md:w-[400px] h-[420px] sm:h-[460px] md:h-[520px] overflow-hidden"
+              >
                 <img
-                  src={m.img}
-                  alt={`${m.name}, ${m.role} at Dencyah Events`}
+                  src={p.img}
+                  alt={p.name}
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-cover"
-                  style={{ filter: "saturate(0.85)" }}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
                 />
-              </div>
-              <h3 className="mt-5 font-serif text-xl text-[var(--espresso)]">{m.name}</h3>
-              <p className="text-xs uppercase tracking-[0.22em] text-[var(--amber-gold)] mt-1">{m.role}</p>
-            </motion.div>
-          ))}
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--espresso)] via-[var(--espresso)]/30 to-transparent" />
+                <span className="pointer-events-none absolute inset-2">
+                  <span className="absolute top-0 left-0 h-px w-0 bg-[var(--amber-gold)] transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute top-0 right-0 w-px h-0 bg-[var(--amber-gold)] transition-all duration-300 delay-200 group-hover:h-full" />
+                  <span className="absolute bottom-0 right-0 h-px w-0 bg-[var(--amber-gold)] transition-all duration-300 delay-[400ms] group-hover:w-full" />
+                  <span className="absolute bottom-0 left-0 w-px h-0 bg-[var(--amber-gold)] transition-all duration-300 delay-[600ms] group-hover:h-full" />
+                </span>
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <h3 className="font-serif text-2xl text-[var(--cream)]">{p.name}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
 
-        <div className="text-center mt-14">
-          <Link to="/meet-the-team" className="thread-link text-xs uppercase tracking-[0.22em] text-[var(--amber-gold)]">
-            Meet The Full Team →
-          </Link>
+        <div className="text-center mt-12">
+          <a
+            href="/portfolio"
+            className="inline-block gold-sweep border border-[var(--amber-gold)] text-[var(--amber-gold)] px-8 py-3.5 text-xs uppercase tracking-[0.24em] hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)] transition-colors"
+          >
+            View Full Portfolio
+          </a>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─────────────────── Testimonials (dark) ─────────────────── */
+/* ───────────────────────── About / Why Linchry ───────────────────────── */
+
+function About() {
+  const imgRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: imgRef, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+
+  return (
+    <section id="about" className="relative bg-[var(--espresso)] text-[var(--cream)] py-24 md:py-32 px-6">
+      <div className="mx-auto max-w-[1200px] grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+        <div ref={imgRef} className="relative aspect-[4/5] overflow-hidden order-2 md:order-1">
+          <motion.img
+            src={aboutImg}
+            alt="A grand banquet hall illuminated by warm chandelier light"
+            loading="lazy"
+            decoding="async"
+            style={{ y }}
+            className="absolute inset-0 h-[110%] w-full object-cover"
+          />
+          <motion.div
+            initial={{ y: 0 }}
+            whileInView={{ y: "-100%" }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 1.4, ease: EASE }}
+            className="absolute inset-0 bg-[var(--espresso)]"
+          />
+        </div>
+
+        <div className="order-1 md:order-2">
+          <GoldRule />
+          <h2 className="font-serif text-[clamp(2rem,4vw,3.25rem)] leading-[1.1] mt-5">
+            Why Clients Choose
+            <br />
+            <em className="italic font-light text-[var(--amber-gold)]">Linchry</em>
+          </h2>
+          <ul className="mt-8 space-y-5 text-[var(--champagne)]/90 leading-relaxed">
+            {[
+              "Structured planning and execution",
+              "Attention to detail at every level",
+              "Reliable, professional team",
+              "Ability to deliver both intimate and large-scale events",
+              "Clean, elegant design approach",
+            ].map((item, i) => (
+              <li key={i} className="flex items-start gap-4">
+                <span className="h-2 w-2 rounded-full bg-[var(--amber-gold)] mt-2 flex-shrink-0" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────── Corporate + Wedding Split ───────────────────────── */
+
+function CorporateWeddingSplit() {
+  return (
+    <section className="bg-[var(--cream)] py-24 md:py-32 px-6">
+      <div className="mx-auto max-w-[1300px]">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-10">
+          {/* Corporate Events */}
+          <motion.article
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.8 }}
+            className="bg-white p-10 md:p-12 shadow-[0_8px_30px_-15px_rgba(60,42,36,0.25)]"
+            style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 40%, transparent)" }}
+          >
+            <h3 className="font-serif text-3xl text-[var(--espresso)]">Corporate Events</h3>
+            <p className="mt-4 text-[var(--taupe)] leading-relaxed">
+              Precision-driven execution for brands, organizations, and institutions.
+            </p>
+            <Link
+              to="/corporate"
+              className="mt-8 inline-block gold-sweep border border-[var(--amber-gold)] text-[var(--amber-gold)] px-7 py-3 text-xs uppercase tracking-[0.24em] hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)] transition-colors"
+            >
+              Explore Corporate Events
+            </Link>
+          </motion.article>
+
+          {/* Weddings */}
+          <motion.article
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="bg-white p-10 md:p-12 shadow-[0_8px_30px_-15px_rgba(60,42,36,0.25)]"
+            style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 40%, transparent)" }}
+          >
+            <h3 className="font-serif text-3xl text-[var(--espresso)]">Weddings & Private Events</h3>
+            <p className="mt-4 text-[var(--taupe)] leading-relaxed">
+              Beautifully designed celebrations tailored to your story.
+            </p>
+            <Link
+              to="/weddings"
+              className="mt-8 inline-block gold-sweep border border-[var(--amber-gold)] text-[var(--amber-gold)] px-7 py-3 text-xs uppercase tracking-[0.24em] hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)] transition-colors"
+            >
+              Explore Weddings
+            </Link>
+          </motion.article>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────── Testimonials ───────────────────────── */
 
 const FALLBACK_TESTIMONIALS = [
   {
-    quote: "Every detail was poetry — we cried at the cutlery.",
-    rest: "The team turned a year of planning into a single perfect evening. We are still being told it was the most beautiful wedding people had ever attended.",
-    name: "Faith & Brian",
-    role: "The Pearl Wedding",
+    quote: "Mileyn didn't just decorate — they transformed the entire experience.",
+    rest: "",
+    name: "Client Name",
+    role: "Event Type",
   },
   {
-    quote: "We launched a product. They launched a feeling.",
-    rest: "Our entire executive team noticed the calm — Dencyah held every thread so we could simply be present.",
-    name: "T. Wanjiru",
-    role: "Director, Tier Capital",
-  },
-  {
-    quote: "The room exhaled when the doors opened.",
-    rest: "I had imagined the evening for months. They built exactly that, and somehow more.",
-    name: "Mrs. Sande",
-    role: "Traditional Wedding · Kakamega",
+    quote: "Professional, organized, and executed flawlessly.",
+    rest: "",
+    name: "Another Client",
+    role: "Event Type",
   },
 ];
 
@@ -608,7 +571,7 @@ function Testimonials() {
   const { data } = useTestimonials();
   const items =
     data && data.length > 0
-      ? data.slice(0, 6).map((t) => {
+      ? data.slice(0, 3).map((t) => {
           const { first, rest } = splitQuote(t.quote);
           return { quote: first, rest, name: t.name, role: t.role ?? "" };
         })
@@ -619,19 +582,13 @@ function Testimonials() {
       <div className="mx-auto max-w-[1300px]">
         <div className="text-center mb-16">
           <span className="block mx-auto h-px w-12 bg-[var(--amber-gold)] mb-5" />
-          <h2 className="font-serif text-[clamp(2rem,4.5vw,3.5rem)]">Words from our clients</h2>
+          <h2 className="font-serif text-[clamp(2rem,4.5vw,3.5rem)]">Testimonials</h2>
         </div>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
           {items.map((t, i) => (
             <TestimonialCard key={`${t.name}-${i}`} {...t} index={i} />
           ))}
-        </div>
-
-        <div className="text-center mt-14">
-          <Link to="/testimonials" className="thread-link text-xs uppercase tracking-[0.22em] text-[var(--amber-gold)]">
-            Read All Stories →
-          </Link>
         </div>
       </div>
     </section>
@@ -676,7 +633,7 @@ function TestimonialCard({
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.8, delay: Math.min(index, 5) * 0.12 }}
+      transition={{ duration: 0.8, delay: Math.min(index, 2) * 0.12 }}
       className="bg-[var(--espresso-deep)] p-8 md:p-10"
       style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 35%, transparent)" }}
     >
@@ -761,9 +718,9 @@ function Contact() {
     }, 500);
   };
 
-  const email = s?.email || "hello@dencyahevents.com";
-  const whatsapp = s?.whatsapp || "+254726765010";
-  const instagram = s?.instagram || "dencyahevents";
+  const email = s?.email || "hello@linchryevents.com";
+  const whatsapp = s?.whatsapp || "+254700000000";
+  const instagram = s?.instagram || "linchryevents";
 
   return (
     <section id="contact" className="bg-[var(--cream)] py-24 md:py-32 px-6">
@@ -771,42 +728,34 @@ function Contact() {
         <div>
           <span className="gold-rule" />
           <h2 className="mt-5 font-serif text-[clamp(2rem,4vw,3.25rem)] leading-[1.1]">
-            Let's create something
+            Let's Create Something
             <br />
-            <em className="italic font-light text-[var(--amber-gold)]">exquisite</em> together.
+            <em className="italic font-light text-[var(--amber-gold)]">Exceptional</em>
           </h2>
           <p className="mt-6 max-w-md text-[var(--espresso)]/80">
-            Tell us about the experience you envision. We respond personally — usually within a few hours.
+            Tell us about your event and we'll guide you through the process.
           </p>
 
           <ul className="mt-10 space-y-3 text-sm text-[var(--espresso)]">
             <li className="flex items-center gap-3">
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
-              <a href={emailUrl(email, "Inquiry — Dencyah Events")} className="thread-link break-all">
+              <a href={emailUrl(email, "Inquiry — Linchry Events")} className="thread-link break-all">
                 {email}
               </a>
             </li>
             <li className="flex items-center gap-3">
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
-              <a href={whatsappUrl(whatsapp, "Hello Dencyah Events — I'd like to talk.")} target="_blank" rel="noreferrer" className="thread-link">
+              <a href={whatsappUrl(whatsapp, "Hello Linchry Events — I'd like to talk.")} target="_blank" rel="noreferrer" className="thread-link">
                 {whatsapp}
               </a>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
-              <span>By Appointment Only</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
-              <span>Western — Nyanza Region</span>
             </li>
           </ul>
 
           <div className="mt-8 flex gap-3">
             {[
               { Icon: Instagram, href: instagramUrl(instagram), label: "Instagram" },
-              { Icon: MessageCircle, href: whatsappUrl(whatsapp, "Hello Dencyah Events — I'd like to talk."), label: "WhatsApp" },
-              { Icon: Mail, href: emailUrl(email, "Inquiry — Dencyah Events"), label: "Email" },
+              { Icon: MessageCircle, href: whatsappUrl(whatsapp, "Hello Linchry Events — I'd like to talk."), label: "WhatsApp" },
+              { Icon: Mail, href: emailUrl(email, "Inquiry — Linchry Events"), label: "Email" },
             ].map(({ Icon, href, label }) => (
               <a
                 key={label}
@@ -840,7 +789,7 @@ function Contact() {
               <span className="gold-rule mx-auto block" />
               <h3 className="mt-5 font-serif text-2xl text-[var(--espresso)]">Your vision has been received.</h3>
               <p className="mt-3 text-sm text-[var(--taupe)]">
-                We'll respond within 24 hours — usually sooner. We're already excited.
+                We'll respond within 24 hours — usually sooner.
               </p>
               <div className="mt-6 mx-auto h-px w-12 bg-[var(--amber-gold)]" />
             </div>
@@ -863,16 +812,15 @@ function Contact() {
                 <select name="event_type" defaultValue="" className="w-full bg-transparent py-3 outline-none text-[var(--taupe)]">
                   <option value="" disabled>Event Type</option>
                   <option>Wedding</option>
-                  <option>Corporate Gala</option>
+                  <option>Corporate Event</option>
                   <option>Private Celebration</option>
-                  <option>Destination Event</option>
                   <option>Other</option>
                 </select>
               </div>
 
               <div className="thread-field border-b border-[var(--border)]">
                 <textarea required name="message" rows={3} maxLength={4000}
-                  placeholder="Tell us about the experience you envision..."
+                  placeholder="Tell us about your event..."
                   className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] resize-none" />
               </div>
 
@@ -883,7 +831,7 @@ function Contact() {
                 transition={{ duration: 0.4 }}
                 className="w-full gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] py-4 text-xs uppercase tracking-[0.24em] mt-2 disabled:opacity-60"
               >
-                {busy ? "Sending…" : "Begin Your Vision"}
+                {busy ? "Sending…" : "Request a Proposal"}
               </motion.button>
             </form>
           )}
