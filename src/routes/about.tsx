@@ -2,22 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { GoldRule } from "@/components/GoldRule";
 
-export const Route = createFileRoute("/about")({{
-  head: () => ({{
+export const Route = createFileRoute("/about")({
+  head: () => ({
     meta: [
-      {{ title: "About Linchry Events" }},
-      {{
+      { title: "About Linchry Events" },
+      {
         name: "description",
         content: "Learn about Linchry Events — our approach, philosophy, and what sets us apart in event design and production.",
-      }},
+      },
     ],
-  }}),
+  }),
   component: About,
-}});
+});
 
 const EASE: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
-function About() {{
+function About() {
   return (
     <div className="pt-20 md:pt-24">
       {/* Intro */}
@@ -59,17 +59,17 @@ function About() {{
           
           <div className="mt-12 space-y-8">
             {[
-              {{ title: "Understand Your Vision", desc: "We listen carefully to your goals, preferences, and unique story." }},
-              {{ title: "Design the Experience", desc: "We create a cohesive vision that reflects your brand and celebrates your moment." }},
-              {{ title: "Execute with Precision", desc: "We handle every detail so you can focus on enjoying the event." }},
-            ].map((item, i) => (
-              <motion.div
-                key={{i}}
-                initial={{{{ opacity: 0, y: 20 }}}}
-                whileInView={{{{ opacity: 1, y: 0 }}}}
-                viewport={{{{ once: true, margin: "-80px" }}}}
-                transition={{{{ duration: 0.8, delay: i * 0.1 }}}}
-              >
+                { title: "Understand Your Vision", desc: "We listen carefully to your goals, preferences, and unique story." },
+                { title: "Design the Experience", desc: "We create a cohesive vision that reflects your brand and celebrates your moment." },
+                { title: "Execute with Precision", desc: "We handle every detail so you can focus on enjoying the event." },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.8, delay: i * 0.1 }}
+                >
                 <h3 className="font-serif text-2xl text-[var(--espresso)]">{item.title}</h3>
                 <p className="mt-3 text-[var(--taupe)] leading-relaxed">{item.desc}</p>
               </motion.div>
@@ -92,11 +92,11 @@ function About() {{
               "We prioritize professional delivery, not guesswork",
             ].map((item, i) => (
               <motion.li
-                key={{i}}
-                initial={{{{ opacity: 0, x: -20 }}}}
-                whileInView={{{{ opacity: 1, x: 0 }}}}
-                viewport={{{{ once: true, margin: "-80px" }}}}
-                transition={{{{ duration: 0.6, delay: i * 0.1 }}}}
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
                 className="flex items-start gap-4"
               >
                 <span className="h-3 w-3 rounded-full bg-[var(--amber-gold)] mt-2 flex-shrink-0" />

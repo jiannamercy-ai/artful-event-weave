@@ -2,18 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { GoldRule } from "@/components/GoldRule";
 
-export const Route = createFileRoute("/weddings")({{
-  head: () => ({{
+export const Route = createFileRoute("/weddings")({
+  head: () => ({
     meta: [
-      {{ title: "Weddings & Private Events — Linchry Events" }},
-      {{
+      { title: "Weddings & Private Events — Linchry Events" },
+      {
         name: "description",
         content: "Your wedding should feel effortless, beautiful, and completely you. Let Linchry Events design your perfect celebration.",
-      }},
+      },
     ],
-  }}),
+  }),
   component: Weddings,
-}});
+});
 
 const WHAT_WE_PROVIDE = [
   "Ceremony setup",
@@ -23,7 +23,7 @@ const WHAT_WE_PROVIDE = [
   "Full event transformation",
 ];
 
-function Weddings() {{
+function Weddings() {
   return (
     <div className="pt-20 md:pt-24">
       {/* Hero */}
@@ -55,11 +55,11 @@ function Weddings() {{
           <div className="mt-12 space-y-6">
             {WHAT_WE_PROVIDE.map((item, i) => (
               <motion.div
-                key={{i}}
-                initial={{{{ opacity: 0, y: 20 }}}}
-                whileInView={{{{ opacity: 1, y: 0 }}}}
-                viewport={{{{ once: true, margin: "-80px" }}}}
-                transition={{{{ duration: 0.6, delay: i * 0.1 }}}}
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
                 className="flex items-start gap-4 pb-6 border-b border-[var(--amber-gold)]/20"
               >
                 <span className="h-3 w-3 rounded-full bg-[var(--amber-gold)] mt-1 flex-shrink-0" />

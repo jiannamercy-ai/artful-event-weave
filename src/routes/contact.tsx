@@ -3,21 +3,21 @@ import { GoldRule } from "@/components/GoldRule";
 import { Mail, MessageCircle, Instagram } from "lucide-react";
 import { useSiteSettings, emailUrl, whatsappUrl, instagramUrl } from "@/lib/site";
 
-export const Route = createFileRoute("/contact")({{
-  head: () => ({{
+export const Route = createFileRoute("/contact")({
+  head: () => ({
     meta: [
-      {{ title: "Contact Linchry Events" }},
-      {{
+      { title: "Contact Linchry Events" },
+      {
         name: "description",
         content: "Get in touch with Linchry Events. Tell us about your event and we'll guide you through the process.",
-      }},
+      },
     ],
-  }}),
+  }),
   component: Contact,
-}});
+});
 
-function Contact() {{
-  const {{ data: s }} = useSiteSettings();
+function Contact() {
+  const { data: s } = useSiteSettings();
   const email = s?.email || "hello@linchryevents.com";
   const whatsapp = s?.whatsapp || "+254700000000";
   const instagram = s?.instagram || "linchryevents";
@@ -51,35 +51,35 @@ function Contact() {{
             <ul className="mt-12 space-y-4 text-sm text-[var(--champagne)]">
               <li className="flex items-center gap-3">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
-                <a href={{emailUrl(email, "Inquiry — Linchry Events")}} className="thread-link break-all hover:text-[var(--amber-gold)]">
-                  {{email}}
+                <a href={emailUrl(email, "Inquiry — Linchry Events")} className="thread-link break-all hover:text-[var(--amber-gold)]">
+                  {email}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
                 <a 
-                  href={{whatsappUrl(whatsapp, "Hello Linchry Events — I'd like to talk about my event.")}}
+                  href={whatsappUrl(whatsapp, "Hello Linchry Events — I'd like to talk about my event.")}
                   target="_blank" 
                   rel="noreferrer"
                   className="thread-link hover:text-[var(--amber-gold)]"
                 >
-                  {{whatsapp}}
+                  {whatsapp}
                 </a>
               </li>
             </ul>
 
             <div className="mt-12 flex gap-4">
               {[
-                {{ Icon: Instagram, href: instagramUrl(instagram), label: "Instagram" }},
-                {{ Icon: MessageCircle, href: whatsappUrl(whatsapp, "Hello Linchry Events — I'd like to talk."), label: "WhatsApp" }},
-                {{ Icon: Mail, href: emailUrl(email, "Inquiry — Linchry Events"), label: "Email" }},
-              ].map(({{{ Icon, href, label }}}) => (
+                { Icon: Instagram, href: instagramUrl(instagram), label: "Instagram" },
+                { Icon: MessageCircle, href: whatsappUrl(whatsapp, "Hello Linchry Events — I'd like to talk."), label: "WhatsApp" },
+                { Icon: Mail, href: emailUrl(email, "Inquiry — Linchry Events"), label: "Email" },
+              ].map(({ Icon, href, label }) => (
                 <a
-                  key={{label}}
-                  href={{href}}
+                  key={label}
+                  href={href}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={{label}}
+                  aria-label={label}
                   className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--amber-gold)] text-[var(--amber-gold)] transition-colors hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)]"
                 >
                   <Icon className="h-5 w-5" />
@@ -90,7 +90,7 @@ function Contact() {{
 
           <div
             className="relative bg-[var(--cream)] text-[var(--espresso)] p-7 md:p-10 shadow-[0_15px_60px_-25px_rgba(60,42,36,0.35)]"
-            style={{{{ border: "1px solid color-mix(in oklab, var(--amber-gold) 40%, transparent)" }}}}
+            style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 40%, transparent)" }}
           >
             <h3 className="font-serif text-2xl mb-6">Quick Message</h3>
             <form className="space-y-5">
@@ -99,7 +99,7 @@ function Contact() {{
                   required 
                   type="text" 
                   name="name" 
-                  maxLength={{120}}
+                  maxLength={120}
                   placeholder="Your name"
                   className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" 
                 />
@@ -108,7 +108,7 @@ function Contact() {{
                 <input 
                   type="email" 
                   name="email" 
-                  maxLength={{254}}
+                  maxLength={254}
                   placeholder="Email"
                   className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" 
                 />
@@ -117,7 +117,7 @@ function Contact() {{
                 <input 
                   type="tel" 
                   name="phone" 
-                  maxLength={{40}}
+                  maxLength={40}
                   placeholder="Phone"
                   className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" 
                 />
@@ -126,8 +126,8 @@ function Contact() {{
                 <textarea 
                   required 
                   name="message" 
-                  rows={{3}}
-                  maxLength={{4000}}
+                  rows={3}
+                  maxLength={4000}
                   placeholder="Tell us about your event..."
                   className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] resize-none" 
                 />
