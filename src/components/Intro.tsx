@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const LETTERS = "DENCYAH".split("");
+const LETTERS = "LINCHRY".split("");
 
 export function Intro({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<"line" | "name" | "events" | "lift" | "done">("line");

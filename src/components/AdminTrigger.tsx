@@ -33,13 +33,15 @@ export function AdminTrigger() {
     setBusy(true);
     try {
       // Map username → admin email
-      const email = username.trim().toLowerCase() === "admin" ? ADMIN_EMAIL : username.trim();
+      const normalized = username.trim().toLowerCase();
+      const isAdminUser = normalized === "lichry" || normalized === "admin";
+      const email = isAdminUser ? ADMIN_EMAIL : username.trim();
 
       // First attempt sign-in
       let { error } = await supabase.auth.signInWithPassword({ email, password });
 
-      // If invalid credentials and using default admin/1234, try to bootstrap then retry
-      if (error && username.trim().toLowerCase() === "admin" && password === "1234") {
+      // If invalid credentials and using default lichry/123456L, try to bootstrap then retry
+      if (error && isAdminUser && password === "123456L") {
         await ensureAdmin();
         const retry = await supabase.auth.signInWithPassword({ email, password });
         error = retry.error;
@@ -49,7 +51,7 @@ export function AdminTrigger() {
         toast.error("Invalid credentials");
         return;
       }
-      sessionStorage.setItem("dencyah_admin", "1");
+      sessionStorage.setItem("linchry_admin", "1");
       toast.success("Welcome back");
       setOpen(false);
       navigate({ to: "/admin" });

@@ -1,4 +1,4 @@
-# Migrating Dencyah Events to an External Supabase Project
+# Migrating Linchry Events to an External Supabase Project
 
 This kit lets you move the platform off Lovable Cloud onto a Supabase
 project you own. You will end up with the same admin dashboard, the
@@ -23,7 +23,7 @@ Supabase URL and keys.
 
 1. Open **SQL Editor → New query**.
 2. Paste the entire contents of `schema.sql` (next to this file).
-3. **Before running**, find/replace `admin@dencyahevents.local` with the
+3. **Before running**, find/replace `admin@linchry.local` with the
    email you want to use as the admin (e.g. `you@yourdomain.com`).
 4. Click **Run**. You should see "Success. No rows returned."
 
@@ -70,7 +70,7 @@ client reads these env vars automatically.
 ## 6. Update the admin email in code (optional)
 
 The admin login modal accepts the literal username `admin` and maps it to
-`admin@dencyah.local`. If you used a different admin email, open
+`admin@linchry.local`. If you used a different admin email, open
 `src/lib/admin.functions.ts` and change `ADMIN_EMAIL` to match.
 
 ## 7. Sign in

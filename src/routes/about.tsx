@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { GoldRule } from "@/components/GoldRule";
 
@@ -115,12 +115,13 @@ function About() {
             <br />
             <em className="italic font-light text-[var(--amber-gold)]">both design and execution.</em>
           </h2>
-          <a
-            href="/#contact"
+          <Link
+            to="/"
+            hash="contact"
             className="mt-10 inline-block gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] px-8 py-3.5 text-xs uppercase tracking-[0.24em] hover:brightness-95"
           >
             Start Your Inquiry
-          </a>
+          </Link>
         </div>
       </section>
     </div>

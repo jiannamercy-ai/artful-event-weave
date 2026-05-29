@@ -69,9 +69,9 @@ function ServiceDetail() {
           {detail.bodyText}
         </div>
         <div className="mt-12 flex flex-wrap gap-4">
-          <a href="/#contact" className="bg-[var(--amber-gold)] text-[var(--espresso)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] gold-sweep">
+          <Link to="/" hash="contact" className="bg-[var(--amber-gold)] text-[var(--espresso)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] gold-sweep">
             Begin Your Vision
-          </a>
+          </Link>
           <Link to="/" className="border border-[var(--amber-gold)] text-[var(--amber-gold)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)] transition-colors">
             ← All Services
           </Link>

@@ -7,8 +7,8 @@ export function Footer() {
 
   const socials = [
     { Icon: Instagram, href: instagramUrl(s?.instagram ?? ""), label: "Instagram" },
-    { Icon: MessageCircle, href: whatsappUrl(s?.whatsapp ?? "", "Hello Dencyah Events — I'd like to talk."), label: "WhatsApp" },
-    { Icon: Mail, href: emailUrl(s?.email ?? "", "Inquiry — Dencyah Events"), label: "Email" },
+    { Icon: MessageCircle, href: whatsappUrl(s?.whatsapp ?? "", "Hello Linchry Events — I'd like to talk."), label: "WhatsApp" },
+    { Icon: Mail, href: emailUrl(s?.email ?? "", "Inquiry — Linchry Events"), label: "Email" },
     { Icon: Facebook, href: "#", label: "Facebook" },
   ];
 
@@ -17,7 +17,7 @@ export function Footer() {
       <div className="mx-auto max-w-[1100px] text-center">
         <Link to="/" className="inline-flex flex-col leading-none">
           <span className="font-serif text-[var(--amber-gold)] font-semibold uppercase text-2xl" style={{ letterSpacing: "0.25em" }}>
-            Dencyah
+            Linchry
           </span>
           <span className="font-serif font-light text-[var(--amber-gold)] mt-1 text-[10px]" style={{ letterSpacing: "0.4em" }}>
             EVENTS
@@ -62,7 +62,7 @@ export function Footer() {
         </div>
 
         <p className="mt-10 text-xs text-[var(--taupe)]">
-          © {new Date().getFullYear()} Dencyah Events. All rights reserved. · {s?.footer_text ?? "Handled. Delivered. Celebrated."}
+          © {new Date().getFullYear()} Linchry Events. All rights reserved. · {s?.footer_text ?? "Handled. Delivered. Celebrated."}
         </p>
       </div>
     </footer>

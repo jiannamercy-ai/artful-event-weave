@@ -16,8 +16,8 @@ const FALLBACK_IMGS = [t1, t2, t3, t4];
 export const Route = createFileRoute("/meet-the-team")({
   head: () => ({
     meta: [
-      { title: "Meet the Team — Dencyah Events" },
-      { name: "description", content: "The curators behind every Dencyah experience." },
+      { title: "Meet the Team — Linchry Events" },
+      { name: "description", content: "The curators behind every Linchry experience." },
     ],
   }),
   component: Team,

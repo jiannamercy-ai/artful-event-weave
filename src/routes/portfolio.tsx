@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { GoldRule } from "@/components/GoldRule";
 import { usePortfolio } from "@/lib/site";
 
@@ -30,15 +31,28 @@ const FALLBACK_PORTFOLIO = [
 
 function Portfolio() {
   const { data } = usePortfolio();
+  const [activeCategory, setActiveCategory] = useState("All");
+  const MotionLink = motion(Link);
   const fallbackImgs = [e1, e2, e3, e4];
   const items =
     data && data.length > 0
       ? data.map((p, i) => ({
           slug: p.slug,
           name: p.name,
+          category: p.category || "Uncategorized",
           img: p.image_url || fallbackImgs[i % fallbackImgs.length],
         }))
       : FALLBACK_PORTFOLIO;
+
+  const categories = [
+    "All",
+    ...Array.from(new Set(items.map((item) => item.category ?? "Uncategorized"))),
+  ];
+
+  const filteredItems =
+    activeCategory === "All"
+      ? items
+      : items.filter((item) => item.category === activeCategory);
 
   return (
     <div className="pt-20 md:pt-24">
@@ -58,11 +72,28 @@ function Portfolio() {
       {/* Portfolio Grid */}
       <section className="bg-[var(--espresso)] text-[var(--cream)] py-24 md:py-32 px-6">
         <div className="mx-auto max-w-6xl">
+          <div className="mb-10 flex flex-wrap justify-center gap-3">
+            {categories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setActiveCategory(category)}
+                className={`rounded-full border px-5 py-2 text-sm uppercase tracking-[0.2em] transition-colors ${
+                  activeCategory === category
+                    ? "border-[var(--amber-gold)] bg-[var(--amber-gold)] text-[var(--espresso)]"
+                    : "border-[var(--cream)] bg-[var(--cream)] text-[var(--espresso)]/80 hover:border-[var(--amber-gold)] hover:text-[var(--espresso)]"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {items.map((project, i) => (
-              <motion.a
+            {filteredItems.map((project, i) => (
+              <MotionLink
                 key={project.slug}
-                href={`/portfolio/${project.slug}`}
+                to={`/portfolio/${project.slug}`}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
@@ -82,8 +113,13 @@ function Portfolio() {
                     <h3 className="font-serif text-xl text-[var(--cream)]">{project.name}</h3>
                   </div>
                 </div>
-              </motion.a>
+              </MotionLink>
             ))}
+            {filteredItems.length === 0 && (
+              <div className="col-span-full rounded-3xl bg-[var(--cream)] p-10 text-center text-[var(--espresso)]">
+                No portfolio items available for this category yet.
+              </div>
+            )}
           </div>
         </div>
       </section>

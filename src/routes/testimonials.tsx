@@ -13,8 +13,8 @@ const STORIES = [
 export const Route = createFileRoute("/testimonials")({
   head: () => ({
     meta: [
-      { title: "Stories from our clients — Dencyah Events" },
-      { name: "description", content: "What our couples and corporate clients say about working with Dencyah Events." },
+      { title: "Stories from our clients — Linchry Events" },
+      { name: "description", content: "What our couples and corporate clients say about working with Linchry Events." },
     ],
   }),
   component: All,

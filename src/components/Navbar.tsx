@@ -44,7 +44,7 @@ export function Navbar() {
             className="font-serif text-[var(--amber-gold)] font-semibold uppercase"
             style={{ letterSpacing: "0.25em", fontSize: scrolled ? "18px" : "22px", transition: "font-size .5s" }}
           >
-            Dencyah
+            Linchry
           </span>
           <span
             className="font-serif font-light text-[var(--amber-gold)] mt-[2px]"
@@ -55,27 +55,32 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {links.slice(1, -1).map((l) => (
-            <a
-              key={l.to}
-              href={l.to.startsWith("/#") ? l.to.slice(1) : l.to}
-              className={`thread-link text-[12px] uppercase tracking-[0.2em] transition-colors ${
-                scrolled || !isHome
-                  ? "text-[var(--espresso)] hover:text-[var(--amber-gold)]"
-                  : "text-[var(--cream)] hover:text-[var(--amber-gold)]"
-              }`}
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.slice(1, -1).map((l) => {
+            const hash = l.to.startsWith("/#") ? l.to.slice(2) : undefined;
+            return (
+              <Link
+                key={l.to}
+                to={hash ? "/" : l.to}
+                hash={hash}
+                className={`thread-link text-[12px] uppercase tracking-[0.2em] transition-colors ${
+                  scrolled || !isHome
+                    ? "text-[var(--espresso)] hover:text-[var(--amber-gold)]"
+                    : "text-[var(--cream)] hover:text-[var(--amber-gold)]"
+                }`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        <a
-          href="/#contact"
+        <Link
+          to="/"
+          hash="contact"
           className="hidden md:inline-flex bg-[var(--amber-gold)] px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-[var(--espresso)] gold-sweep hover:bg-[var(--amber-gold)]/90"
         >
           Begin Your Vision
-        </a>
+        </Link>
 
         <button
           onClick={() => setOpen((v) => !v)}
@@ -109,21 +114,23 @@ export function Navbar() {
           >
             <nav className="flex flex-col px-6 py-8">
               {links.map((l, i) => (
-                <a
+                <Link
                   key={l.to}
-                  href={l.to.startsWith("/#") ? l.to.slice(1) : l.to}
+                  to={l.to.startsWith("/#") ? "/" : l.to}
+                  hash={l.to.startsWith("/#") ? l.to.slice(2) : undefined}
                   className="font-serif text-2xl text-[var(--espresso)] py-4"
                 >
                   {l.label}
                   {i < links.length - 1 && <div className="mt-4 h-px w-full bg-[var(--amber-soft)]" />}
-                </a>
+                </Link>
               ))}
-              <a
-                href="/#contact"
+              <Link
+                to="/"
+                hash="contact"
                 className="mt-6 bg-[var(--amber-gold)] text-center px-5 py-4 text-xs uppercase tracking-[0.22em] text-[var(--espresso)]"
               >
                 Begin Your Vision
-              </a>
+              </Link>
             </nav>
           </motion.div>
         )}

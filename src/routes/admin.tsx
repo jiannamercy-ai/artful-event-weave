@@ -42,17 +42,17 @@ function AdminLayout() {
       const { data, error } = await supabase.auth.getSession();
       if (cancelled) return;
       if (error || !data.session) {
-        sessionStorage.removeItem("dencyah_admin");
+        sessionStorage.removeItem("linchry_admin");
         navigate({ to: "/" });
         return;
       }
-      sessionStorage.setItem("dencyah_admin", "1");
+      sessionStorage.setItem("linchry_admin", "1");
       setReady(true);
     })();
 
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (!session) {
-        sessionStorage.removeItem("dencyah_admin");
+        sessionStorage.removeItem("linchry_admin");
         navigate({ to: "/" });
       }
     });
@@ -64,7 +64,7 @@ function AdminLayout() {
 
   const logout = async () => {
     await supabase.auth.signOut();
-    sessionStorage.removeItem("dencyah_admin");
+    sessionStorage.removeItem("linchry_admin");
     navigate({ to: "/" });
   };
 
@@ -75,7 +75,7 @@ function AdminLayout() {
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-neutral-200 bg-white md:flex">
         <div className="px-6 py-6 border-b border-neutral-200">
           <p className="font-serif text-lg" style={{ letterSpacing: "0.2em" }}>
-            DENCYAH
+            LINCHRY
           </p>
           <p className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mt-1">Admin</p>
         </div>
@@ -115,7 +115,7 @@ function AdminLayout() {
       </aside>
       <div className="md:pl-60">
         <header className="md:hidden flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3">
-          <p className="font-serif tracking-[0.2em]">DENCYAH · Admin</p>
+          <p className="font-serif tracking-[0.2em]">LINCHRY · Admin</p>
           <button onClick={logout} className="text-sm text-neutral-600">Sign out</button>
         </header>
         <div className="md:hidden flex gap-1 overflow-x-auto border-b border-neutral-200 bg-white px-2 py-2">
