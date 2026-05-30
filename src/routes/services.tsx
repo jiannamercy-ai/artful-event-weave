@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { GoldRule } from "@/components/GoldRule";
+import { Mail, MessageCircle, Instagram } from "lucide-react";
+import { useSiteSettings, emailUrl, whatsappUrl, instagramUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -70,9 +72,14 @@ const PROCESS = [
 ];
 
 function Services() {
+  const { data: s } = useSiteSettings();
+  const email = s?.email || "hello@linchryevents.com";
+  const whatsapp = s?.whatsapp || "+254700000000";
+  const instagram = s?.instagram || "linchryevents";
+
   return (
     <div className="pt-20 md:pt-24">
-      {/* Intro */}
+      {/* INTRO */}
       <section className="bg-[var(--cream)] py-16 md:py-20 px-6">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="font-serif text-[clamp(2.5rem,5vw,3.75rem)] leading-tight text-[var(--espresso)]">
@@ -84,7 +91,7 @@ function Services() {
         </div>
       </section>
 
-      {/* Service Cards */}
+      {/* SERVICE CARDS - TEXT ONLY, NO IMAGES */}
       <section className="bg-[var(--espresso)] text-[var(--cream)] py-24 md:py-32 px-6">
         <div className="mx-auto max-w-6xl">
           <div className="space-y-12">
@@ -119,7 +126,7 @@ function Services() {
         </div>
       </section>
 
-      {/* Our Process */}
+      {/* OUR PROCESS */}
       <section className="bg-[var(--cream)] py-24 md:py-32 px-6">
         <div className="mx-auto max-w-4xl">
           <div className="text-center mb-16">
@@ -151,21 +158,76 @@ function Services() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-[var(--espresso)] text-[var(--cream)] py-20 md:py-24 px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-serif text-[clamp(1.75rem,3.5vw,2.5rem)]">
-            Let's plan your event
-            <br />
-            <em className="italic font-light text-[var(--amber-gold)]">the right way.</em>
-          </h2>
-          <Link
-            to="/"
-            hash="contact"
-            className="mt-10 inline-block gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] px-8 py-3.5 text-xs uppercase tracking-[0.24em] hover:brightness-95"
+      {/* CONTACT + CTA */}
+      <section className="bg-[var(--espresso)] text-[var(--cream)] py-24 md:py-32 px-6">
+        <div className="mx-auto max-w-[1100px] grid md:grid-cols-2 gap-12 md:gap-16">
+          <div>
+            <GoldRule />
+            <h2 className="mt-8 font-serif text-[clamp(2rem,4vw,3.25rem)] leading-[1.1]">
+              Let's plan your event
+              <br />
+              <em className="italic font-light text-[var(--amber-gold)]">the right way.</em>
+            </h2>
+            <p className="mt-6 max-w-md text-[var(--champagne)]/90 leading-relaxed">
+              Tell us which services interest you and we'll create a custom proposal for your vision.
+            </p>
+
+            <ul className="mt-10 space-y-3 text-sm text-[var(--champagne)]">
+              <li className="flex items-center gap-3">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
+                <a href={emailUrl(email, "Service Inquiry — Linchry Events")} className="thread-link break-all hover:text-[var(--amber-gold)]">
+                  {email}
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--amber-gold)]" />
+                <a 
+                  href={whatsappUrl(whatsapp, "Hello Linchry Events — I'd like to know more about your services.")}
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="thread-link hover:text-[var(--amber-gold)]"
+                >
+                  {whatsapp}
+                </a>
+              </li>
+            </ul>
+
+            <div className="mt-8 flex gap-4">
+              {[
+                { Icon: Instagram, href: instagramUrl(instagram), label: "Instagram" },
+                { Icon: MessageCircle, href: whatsappUrl(whatsapp, "Hello Linchry Events — I'd like to talk."), label: "WhatsApp" },
+                { Icon: Mail, href: emailUrl(email, "Service Inquiry — Linchry Events"), label: "Email" },
+              ].map(({ Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={label}
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--amber-gold)] text-[var(--amber-gold)] transition-colors hover:bg-[var(--amber-gold)] hover:text-[var(--espresso)]"
+                >
+                  <Icon className="h-5 w-5" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.8 }}
           >
-            Request a Proposal
-          </Link>
+            <Link
+              to="/contact"
+              className="inline-block gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] px-8 py-3.5 text-xs uppercase tracking-[0.24em] hover:brightness-95"
+            >
+              Request a Proposal
+            </Link>
+            <p className="mt-6 text-[var(--champagne)]/90 text-sm leading-relaxed">
+              Our team will review your requirements and get back to you with a customized proposal within 24 hours.
+            </p>
+          </motion.div>
         </div>
       </section>
     </div>
