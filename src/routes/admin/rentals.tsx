@@ -62,7 +62,6 @@ function RentalsAdmin() {
   const categories = Array.from(new Set(items.map((i) => i.category))).sort();
 
   const addItem = async () => {
-    const slug = `new-item-${Date.now()}`;
     const { error } = await supabase.from("rental_items").insert({
       category: "Catering Equipment",
       name: "New Item",
