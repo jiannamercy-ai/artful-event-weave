@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Inbox, Images, Users, Sparkles, MessageSquareQuote } from "lucide-react";
+import { Inbox, Images, Users, Sparkles, MessageSquareQuote, Package } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
   component: Dashboard,
@@ -23,13 +23,15 @@ function Dashboard() {
   const { data } = useQuery({
     queryKey: ["admin-counts"],
     queryFn: async () => {
-      const [services, portfolio, team, testimonials, inquiries, unread] = await Promise.all([
+      const [services, portfolio, team, testimonials, inquiries, unread, rentals, hireRequests] = await Promise.all([
         supabase.from("services").select("id", { count: "exact", head: true }),
         supabase.from("portfolio_items").select("id", { count: "exact", head: true }),
         supabase.from("team_members").select("id", { count: "exact", head: true }),
         supabase.from("testimonials").select("id", { count: "exact", head: true }),
         supabase.from("inquiries").select("id", { count: "exact", head: true }),
         supabase.from("inquiries").select("id", { count: "exact", head: true }).eq("read", false),
+        supabase.from("rental_items").select("id", { count: "exact", head: true }),
+        supabase.from("hire_requests").select("id", { count: "exact", head: true }).eq("read", false),
       ]);
       return {
         services: services.count ?? 0,
@@ -38,6 +40,8 @@ function Dashboard() {
         testimonials: testimonials.count ?? 0,
         inquiries: inquiries.count ?? 0,
         unread: unread.count ?? 0,
+        rentals: rentals.count ?? 0,
+        hireRequestsUnread: hireRequests.count ?? 0,
       };
     },
   });
@@ -59,12 +63,13 @@ function Dashboard() {
       <h1 className="font-serif text-3xl">Welcome back.</h1>
       <p className="text-sm text-neutral-500 mt-1">Edit any part of the site from here.</p>
 
-      <div className="mt-6 grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="mt-6 grid grid-cols-2 lg:grid-cols-6 gap-4">
         <StatCard label="Inquiries" value={`${data?.unread ?? 0} / ${data?.inquiries ?? 0}`} Icon={Inbox} to="/admin/inquiries" />
         <StatCard label="Services" value={data?.services ?? 0} Icon={Sparkles} to="/admin/services" />
         <StatCard label="Portfolio" value={data?.portfolio ?? 0} Icon={Images} to="/admin/portfolio" />
         <StatCard label="Team" value={data?.team ?? 0} Icon={Users} to="/admin/team" />
         <StatCard label="Testimonials" value={data?.testimonials ?? 0} Icon={MessageSquareQuote} to="/admin/testimonials" />
+        <StatCard label="Rentals" value={`${data?.hireRequestsUnread ?? 0}/${data?.rentals ?? 0}`} Icon={Package} to="/admin/rentals" />
       </div>
 
       <section className="mt-10">
@@ -81,7 +86,7 @@ function Dashboard() {
           {recent?.map((i) => (
             <div key={i.id} className="flex items-center justify-between p-4">
               <div>
-                <p className="font-medium">{i.name} {!i.read && <span className="ml-2 text-[10px] uppercase tracking-wider text-[var(--amber-gold)]">New</span>}</p>
+                <p className="font-medium">{i.name} {!i.read && <span className="ml-2 text-[10px] uppercase tracking-wider text-[var(--amber-gold)]">NEW</span>}</p>
                 <p className="text-xs text-neutral-500">{i.email || i.phone}</p>
               </div>
               <p className="text-xs text-neutral-400">{new Date(i.created_at).toLocaleDateString()}</p>
