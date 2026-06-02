@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { supabase } from "@/integrations/supabase/client.server";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const BUSINESS_EMAIL = "hello@linchryevents.com"; // Will be overridden by settings
 
@@ -24,7 +24,7 @@ interface HireRequest {
 // Get business email from settings
 async function getBusinessEmail(): Promise<string> {
   try {
-    const { data } = await supabase
+    const { data } = await supabaseAdmin
       .from("site_settings")
       .select("email")
       .eq("id", 1)
@@ -63,7 +63,7 @@ This message was sent from the Linchry Events website contact form.
     console.log(emailBody);
 
     // Store in database as inquiry
-    const { error } = await supabase.from("inquiries").insert({
+    const { error } = await supabaseAdmin.from("inquiries").insert({
       name: input.name,
       email: input.email || null,
       phone: input.phone || null,
@@ -108,7 +108,7 @@ This message was sent from the Linchry Events rent-an-item page.
     console.log(emailBody);
 
     // Store in database as hire request
-    const { error } = await supabase.from("hire_requests").insert({
+    const { error } = await supabaseAdmin.from("hire_requests").insert({
       name: input.name,
       phone: input.phone,
       email: input.email,
