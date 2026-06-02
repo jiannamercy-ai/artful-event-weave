@@ -17,6 +17,7 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { AdminTrigger } from "@/components/AdminTrigger";
 import { Toaster } from "@/components/ui/sonner";
 import { useRouterState } from "@tanstack/react-router";
+import { initializeAdminUser } from "@/lib/admin.functions";
 
 function NotFoundComponent() {
   return (
@@ -60,6 +61,10 @@ function ErrorComponent({ reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: async () => {
+    // Auto-bootstrap admin user on server startup
+    await initializeAdminUser();
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
