@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { GoldRule } from "@/components/GoldRule";
-import { usePortfolio } from "@/lib/site";
+import { usePortfolio, usePortfolioCategories } from "@/lib/site";
 import { Mail, MessageCircle, Instagram } from "lucide-react";
 import { useSiteSettings, emailUrl, whatsappUrl, instagramUrl } from "@/lib/site";
 
@@ -39,12 +39,13 @@ const FALLBACK_PORTFOLIO = [
 
 function Portfolio() {
   const { data } = usePortfolio();
+  const { data: categories = [] } = usePortfolioCategories();
   const { data: s } = useSiteSettings();
   const email = s?.email || "hello@linchryevents.com";
   const whatsapp = s?.whatsapp || "+254700000000";
   const instagram = s?.instagram || "linchryevents";
 
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const MotionLink = motion(Link);
   const fallbackImgs = [e1, e2, e3, e4, heroImg, aboutImg];
 
@@ -58,12 +59,15 @@ function Portfolio() {
         }))
       : FALLBACK_PORTFOLIO;
 
-  const categories = ["All", "Weddings", "Corporate", "Private"];
+  // Set active category to first one if not set
+  const effectiveCategory = activeCategory || categories[0]?.name || null;
+  
+  const categoryList = [{ name: "All", slug: "all" }, ...categories];
 
   const filteredItems =
-    activeCategory === "All"
+    effectiveCategory === "All" || !effectiveCategory
       ? items
-      : items.filter((item) => item.category === activeCategory);
+      : items.filter((item) => item.category === effectiveCategory);
 
   return (
     <div className="pt-20 md:pt-24">
@@ -85,25 +89,25 @@ function Portfolio() {
         <div className="mx-auto max-w-6xl">
           {/* FILTER TABS */}
           <div className="mb-16 flex flex-wrap justify-center gap-3">
-            {categories.map((category) => (
+            {categoryList.map((category) => (
               <motion.button
-                key={category}
+                key={category.slug}
                 type="button"
-                onClick={() => setActiveCategory(category)}
+                onClick={() => setActiveCategory(category.name)}
                 initial={false}
                 animate={{
-                  backgroundColor: activeCategory === category 
+                  backgroundColor: effectiveCategory === category.name
                     ? "var(--amber-gold)" 
                     : "transparent",
                 }}
                 transition={{ duration: 0.3 }}
                 className={`rounded-full border px-5 py-2 text-sm uppercase tracking-[0.2em] transition-colors ${
-                  activeCategory === category
+                  effectiveCategory === category.name
                     ? "border-[var(--amber-gold)] text-[var(--espresso)]"
                     : "border-[var(--cream)] text-[var(--cream)] hover:border-[var(--amber-gold)]"
                 }`}
               >
-                {category}
+                {category.name}
               </motion.button>
             ))}
           </div>
@@ -111,7 +115,7 @@ function Portfolio() {
           {/* GALLERY GRID */}
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeCategory}
+              key={effectiveCategory}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

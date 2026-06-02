@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { GoldRule } from "@/components/GoldRule";
 import { Mail, MessageCircle, Instagram } from "lucide-react";
 import { useSiteSettings, emailUrl, whatsappUrl, instagramUrl } from "@/lib/site";
+import { sendContactEmail } from "@/lib/email.server";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -93,55 +96,121 @@ function Contact() {
             style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 40%, transparent)" }}
           >
             <h3 className="font-serif text-2xl mb-6">Quick Message</h3>
-            <form className="space-y-5">
-              <div className="border-b border-[var(--taupe)]/20">
-                <input 
-                  required 
-                  type="text" 
-                  name="name" 
-                  maxLength={120}
-                  placeholder="Your name"
-                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" 
-                />
-              </div>
-              <div className="border-b border-[var(--taupe)]/20">
-                <input 
-                  type="email" 
-                  name="email" 
-                  maxLength={254}
-                  placeholder="Email"
-                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" 
-                />
-              </div>
-              <div className="border-b border-[var(--taupe)]/20">
-                <input 
-                  type="tel" 
-                  name="phone" 
-                  maxLength={40}
-                  placeholder="Phone"
-                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" 
-                />
-              </div>
-              <div className="border-b border-[var(--taupe)]/20">
-                <textarea 
-                  required 
-                  name="message" 
-                  rows={3}
-                  maxLength={4000}
-                  placeholder="Tell us about your event..."
-                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] resize-none" 
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] py-4 text-xs uppercase tracking-[0.24em] mt-2 hover:brightness-95"
-              >
-                Send Message
-              </button>
-            </form>
+            <ContactForm />
           </div>
         </div>
       </section>
     </div>
+  );
+}
+
+function ContactForm() {
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      const result = await sendContactEmail({
+        name: formData.get("name") as string,
+        email: (formData.get("email") as string) || undefined,
+        phone: (formData.get("phone") as string) || undefined,
+        event_type: (formData.get("event_type") as string) || undefined,
+        event_date: (formData.get("event_date") as string) || undefined,
+        message: formData.get("message") as string,
+      });
+
+      if (result.success) {
+        toast.success(result.message);
+        setSubmitted(true);
+        (e.target as HTMLFormElement).reset();
+        setTimeout(() => setSubmitted(false), 5000);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to send message");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {submitted && (
+        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded">
+          <p className="text-green-800 text-sm font-medium">
+            ✓ Message received! We'll respond within 24 hours.
+          </p>
+        </div>
+      )}
+
+      <div className="border-b border-[var(--taupe)]/20">
+        <input
+          required
+          type="text"
+          name="name"
+          maxLength={120}
+          placeholder="Your name"
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
+        />
+      </div>
+      <div className="border-b border-[var(--taupe)]/20">
+        <input
+          type="email"
+          name="email"
+          maxLength={254}
+          placeholder="Email"
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
+        />
+      </div>
+      <div className="border-b border-[var(--taupe)]/20">
+        <input
+          type="tel"
+          name="phone"
+          maxLength={40}
+          placeholder="Phone"
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
+        />
+      </div>
+      <div className="border-b border-[var(--taupe)]/20">
+        <select
+          name="event_type"
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] text-[var(--espresso)]"
+        >
+          <option value="">Event Type (optional)</option>
+          <option>Wedding</option>
+          <option>Corporate Event</option>
+          <option>Private Celebration</option>
+          <option>Funeral</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div className="border-b border-[var(--taupe)]/20">
+        <input
+          type="date"
+          name="event_date"
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
+        />
+      </div>
+      <div className="border-b border-[var(--taupe)]/20">
+        <textarea
+          required
+          name="message"
+          rows={3}
+          maxLength={4000}
+          placeholder="Tell us about your event..."
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] resize-none"
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] py-4 text-xs uppercase tracking-[0.24em] mt-2 hover:brightness-95 disabled:opacity-50 transition-opacity"
+      >
+        {loading ? "Sending..." : "Send Message"}
+      </button>
+    </form>
   );
 }

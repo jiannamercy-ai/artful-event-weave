@@ -28,6 +28,14 @@ export type PortfolioRow = {
   chapter: string | null;
   story: string | null;
   image_url: string | null;
+  category_id?: string | null;
+  sort_order: number;
+};
+
+export type PortfolioCategoryRow = {
+  id: string;
+  name: string;
+  slug: string;
   sort_order: number;
 };
 
@@ -94,6 +102,18 @@ export function usePortfolio() {
       const { data, error } = await supabase.from("portfolio_items").select("*").order("sort_order");
       if (error) throw error;
       return (data ?? []) as PortfolioRow[];
+    },
+    staleTime: STALE,
+  });
+}
+
+export function usePortfolioCategories() {
+  return useQuery({
+    queryKey: ["portfolio-categories"],
+    queryFn: async (): Promise<PortfolioCategoryRow[]> => {
+      const { data, error } = await supabase.from("portfolio_categories").select("*").order("sort_order");
+      if (error) throw error;
+      return (data ?? []) as PortfolioCategoryRow[];
     },
     staleTime: STALE,
   });
