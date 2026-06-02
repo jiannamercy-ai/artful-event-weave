@@ -1,7 +1,7 @@
 # Admin Credentials
 
-**Email:** linchry@gmail.com
-**Password:** 1234L
+**Email:** admin@linchry.local
+**Password:** 123456L
 
 ## Important Security Notes
 
