@@ -39,9 +39,7 @@ async function getBusinessEmail(): Promise<string> {
 }
 
 // Send contact form email
-export const sendContactEmail = createServerFn({ method: "POST" })
-  .input<ContactSubmission>()
-  .handler(async (input) => {
+export const sendContactEmail = createServerFn({ method: "POST" })(async (input: ContactSubmission) => {
     const businessEmail = await getBusinessEmail();
 
     const emailBody = `
@@ -104,9 +102,7 @@ This message was sent from the Linchry Events website contact form.
   });
 
 // Send hire request email
-export const sendHireRequestEmail = createServerFn({ method: "POST" })
-  .input<HireRequest>()
-  .handler(async (input) => {
+export const sendHireRequestEmail = createServerFn({ method: "POST" })(async (input: HireRequest) => {
     const businessEmail = await getBusinessEmail();
 
     const emailBody = `
