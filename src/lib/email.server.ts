@@ -2,7 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const BUSINESS_EMAIL = "jannesokumu20@gmail.com";
 const FROM_EMAIL = "onboarding@resend.dev"; // Resend's sandbox email that works without verification
 
@@ -41,6 +40,7 @@ async function getBusinessEmail(): Promise<string> {
 // Send contact form email
 export const sendContactEmail = createServerFn({ method: "POST" })(async (input: ContactSubmission) => {
     const businessEmail = await getBusinessEmail();
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const emailBody = `
 New Inquiry from Linchry Events Website
@@ -104,6 +104,7 @@ This message was sent from the Linchry Events website contact form.
 // Send hire request email
 export const sendHireRequestEmail = createServerFn({ method: "POST" })(async (input: HireRequest) => {
     const businessEmail = await getBusinessEmail();
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const emailBody = `
 New Hire Request from Linchry Events Website
