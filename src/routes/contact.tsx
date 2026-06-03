@@ -3,7 +3,6 @@ import { useState } from "react";
 import { GoldRule } from "@/components/GoldRule";
 import { Mail, MessageCircle, Instagram } from "lucide-react";
 import { useSiteSettings, emailUrl, whatsappUrl, instagramUrl } from "@/lib/site";
-import { sendContactEmail } from "@/lib/email.server";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/contact")({
@@ -105,49 +104,35 @@ function Contact() {
 }
 
 function ContactForm() {
+  const { data: s } = useSiteSettings();
+  const whatsapp = s?.whatsapp || "+254700000000";
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const formData = new FormData(e.currentTarget);
-      const result = await sendContactEmail({
-        name: formData.get("name") as string,
-        email: (formData.get("email") as string) || undefined,
-        phone: (formData.get("phone") as string) || undefined,
-        event_type: (formData.get("event_type") as string) || undefined,
-        event_date: (formData.get("event_date") as string) || undefined,
-        message: formData.get("message") as string,
-      });
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name") as string;
+    const email = (formData.get("email") as string) || "";
+    const phone = (formData.get("phone") as string) || "";
+    const event_type = (formData.get("event_type") as string) || "";
+    const event_date = (formData.get("event_date") as string) || "";
+    const message = formData.get("message") as string;
 
-      if (result && result.success) {
-        toast.success(result.message);
-        setSubmitted(true);
-        (e.target as HTMLFormElement).reset();
-        setTimeout(() => setSubmitted(false), 5000);
-      } else {
-        toast.error(result?.message || "Failed to send message");
-      }
-    } catch (error) {
-      console.error("Contact form submission error:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to send message");
-    } finally {
-      setLoading(false);
-    }
+    const whatsappMessage = `*Event Inquiry from Linchry Events Website*
+
+*Name:* ${name}
+${email ? `*Email:* ${email}\n` : ""}${phone ? `*Phone:* ${phone}\n` : ""}${event_type ? `*Event Type:* ${event_type}\n` : ""}${event_date ? `*Event Date:* ${event_date}\n` : ""}
+*Message:*
+${message}`;
+
+    const url = whatsappUrl(whatsapp, whatsappMessage);
+    window.location.href = url;
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {submitted && (
-        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded">
-          <p className="text-green-800 text-sm font-medium">
-            ✓ Message received! We'll respond within 24 hours.
-          </p>
-        </div>
-      )}
 
       <div className="border-b border-[var(--taupe)]/20">
         <input
@@ -218,7 +203,7 @@ function ContactForm() {
         disabled={loading}
         className="w-full gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] py-4 text-xs uppercase tracking-[0.24em] mt-2 hover:brightness-95 disabled:opacity-50 transition-opacity"
       >
-        {loading ? "Sending..." : "Send Message"}
+        {loading ? "Opening WhatsApp..." : "Send via WhatsApp"}
       </button>
     </form>
   );

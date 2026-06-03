@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, X } from "lucide-react";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { useSiteSettings, whatsappUrl } from "@/lib/site";
 import { toast } from "sonner";
 
 const schema = z.object({
@@ -11,9 +11,10 @@ const schema = z.object({
 });
 
 export function QuickInquiry() {
+  const { data: s } = useSiteSettings();
+  const whatsapp = s?.whatsapp || "+254700000000";
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
-  const [sent, setSent] = useState(false);
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [busy, setBusy] = useState(false);
@@ -25,7 +26,7 @@ export function QuickInquiry() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = schema.safeParse({ name, contact });
     if (!parsed.success) {
@@ -33,19 +34,14 @@ export function QuickInquiry() {
       return;
     }
     setBusy(true);
-    const isEmail = /@/.test(parsed.data.contact);
-    const { error } = await supabase.from("inquiries").insert({
-      name: parsed.data.name,
-      email: isEmail ? parsed.data.contact : null,
-      phone: isEmail ? null : parsed.data.contact,
-      message: "Quick inquiry from floating button.",
-    });
-    setBusy(false);
-    if (error) {
-      toast.error("Could not send. Please try again.");
-      return;
-    }
-    setSent(true);
+
+    const whatsappMessage = `*Quick Inquiry from Linchry Events Website*
+
+*Name:* ${parsed.data.name}
+*Contact:* ${parsed.data.contact}`;
+
+    const url = whatsappUrl(whatsapp, whatsappMessage);
+    window.location.href = url;
   };
 
   return (
@@ -96,15 +92,9 @@ export function QuickInquiry() {
               </button>
               <span className="gold-rule" />
               <h3 className="font-serif text-2xl mt-3 text-[var(--espresso)]">A quick hello.</h3>
-              <p className="mt-2 text-sm text-[var(--taupe)]">Leave us your details — we'll call within 2 hours.</p>
+              <p className="mt-2 text-sm text-[var(--taupe)]">Leave us your details — we'll chat on WhatsApp.</p>
 
-              {sent ? (
-                <div className="mt-8">
-                  <p className="font-serif text-xl text-[var(--espresso)]">We'll call within 2 hours. Truly.</p>
-                  <div className="mt-4 h-px w-12 bg-[var(--amber-gold)]" />
-                </div>
-              ) : (
-                <form onSubmit={submit} className="mt-6 space-y-5">
+              <form onSubmit={submit} className="mt-6 space-y-5">
                   <div className="thread-field border-b border-[var(--border)]">
                     <input
                       required
@@ -131,10 +121,9 @@ export function QuickInquiry() {
                     disabled={busy}
                     className="w-full bg-[var(--amber-gold)] py-3 text-sm uppercase tracking-[0.22em] text-[var(--espresso)] gold-sweep disabled:opacity-60"
                   >
-                    {busy ? "Sending…" : "I'm Ready to Talk"}
+                    {busy ? "Opening WhatsApp…" : "Chat on WhatsApp"}
                   </button>
                 </form>
-              )}
             </motion.div>
           </motion.div>
         )}

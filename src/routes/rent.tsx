@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { sendHireRequestEmail } from "@/lib/email.server";
 import { GoldRule } from "@/components/GoldRule";
 import { useSiteSettings, emailUrl, whatsappUrl, instagramUrl } from "@/lib/site";
 import { Mail, MessageCircle, Instagram } from "lucide-react";
@@ -209,38 +208,36 @@ function RentPage() {
 }
 
 function HireRequestForm() {
+  const { data: s } = useSiteSettings();
+  const whatsapp = s?.whatsapp || "+254700000000";
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const formData = new FormData(e.currentTarget);
-      const result = await sendHireRequestEmail({
-        name: formData.get("name") as string,
-        phone: formData.get("phone") as string,
-        email: formData.get("email") as string,
-        event_date: (formData.get("event_date") as string) || undefined,
-        items_interested: (formData.get("items_interested") as string) || undefined,
-        notes: (formData.get("notes") as string) || undefined,
-      });
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name") as string;
+    const phone = formData.get("phone") as string;
+    const email = formData.get("email") as string;
+    const event_date = (formData.get("event_date") as string) || "";
+    const items_interested = (formData.get("items_interested") as string) || "";
+    const notes = (formData.get("notes") as string) || "";
 
-      if (result && result.success) {
-        toast.success(result.message);
-        setSubmitted(true);
-        (e.target as HTMLFormElement).reset();
-        setTimeout(() => setSubmitted(false), 5000);
-      } else {
-        toast.error(result?.message || "Failed to submit request");
-      }
-    } catch (error) {
-      console.error("Hire request submission error:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to submit request");
-    } finally {
-      setLoading(false);
-    }
+    const whatsappMessage = `*Equipment Rental Request from Linchry Events Website*
+
+*Name:* ${name}
+*Phone:* ${phone}
+*Email:* ${email}
+${event_date ? `*Event Date:* ${event_date}\n` : ""}
+*Items Interested In:*
+${items_interested || "Not specified"}
+
+*Additional Notes:*
+${notes || "None"}`;
+
+    const url = whatsappUrl(whatsapp, whatsappMessage);
+    window.location.href = url;
   };
 
   return (
@@ -249,14 +246,6 @@ function HireRequestForm() {
       style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 40%, transparent)" }}
     >
       <h3 className="font-serif text-2xl mb-6">Hire Request</h3>
-
-      {submitted && (
-        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded">
-          <p className="text-green-800 text-sm font-medium">
-            ✓ Request received! We'll be in touch within 24 hours.
-          </p>
-        </div>
-      )}
 
       <form id="hire-form" onSubmit={handleSubmit} className="space-y-5">
         <div className="border-b border-[var(--taupe)]/20">
@@ -327,7 +316,7 @@ function HireRequestForm() {
           disabled={loading}
           className="w-full bg-[var(--amber-gold)] text-[var(--espresso)] py-3 rounded text-sm uppercase tracking-[0.22em] font-medium hover:bg-[var(--amber-gold)]/90 disabled:opacity-50 transition-colors"
         >
-          {loading ? "Sending..." : "Submit Request"}
+          {loading ? "Opening WhatsApp..." : "Send via WhatsApp"}
         </button>
       </form>
     </div>
