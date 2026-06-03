@@ -3,7 +3,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { Resend } from "resend";
 
 const BUSINESS_EMAIL = "jannesokumu20@gmail.com";
-const FROM_EMAIL = "onboarding@resend.dev"; // Resend's sandbox email that works without verification
+const FROM_EMAIL = "jannesokumu20@gmail.com"; // Verified email for sending
 
 interface ContactSubmission {
   name: string;
