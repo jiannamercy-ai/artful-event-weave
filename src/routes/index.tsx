@@ -693,6 +693,7 @@ ${email ? `*Email:* ${email}\n` : ""}${phone ? `*Phone:* ${phone}\n` : ""}${even
 ${message}`;
 
     const url = whatsappUrl(whatsapp_num, whatsappMessage);
+    setSent(true);
     window.location.href = url;
   };
 
@@ -794,6 +795,11 @@ ${message}`;
                 {busy ? "Opening WhatsApp…" : "Send via WhatsApp"}
               </motion.button>
             </form>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-[var(--espresso)] font-serif text-lg">Thank you for your inquiry!</p>
+              <p className="text-[var(--taupe)] text-sm mt-2">We'll be in touch shortly.</p>
+            </div>
           )}
         </div>
       </div>
