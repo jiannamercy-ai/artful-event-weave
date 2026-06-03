@@ -61,7 +61,7 @@ This message was sent from the Linchry Events website contact form.
     // Send email via Resend
     if (process.env.RESEND_API_KEY) {
       try {
-        await resend.emails.send({
+        const result = await resend.emails.send({
           from: FROM_EMAIL,
           to: businessEmail,
           subject: `New Event Inquiry: ${input.name}`,
@@ -79,10 +79,13 @@ This message was sent from the Linchry Events website contact form.
             <p><small>This message was sent from the Linchry Events website contact form.</small></p>
           `,
         });
+        console.log("Email sent successfully:", result);
       } catch (err) {
-        console.error("Failed to send email via Resend:", err);
+        console.error("Failed to send contact email:", err);
         // Continue to store in DB even if email fails
       }
+    } else {
+      console.warn("RESEND_API_KEY not set - emails will not be sent");
     }
 
     // Store in database as inquiry
@@ -127,7 +130,7 @@ This message was sent from the Linchry Events rent-an-item page.
     // Send email via Resend
     if (process.env.RESEND_API_KEY) {
       try {
-        await resend.emails.send({
+        const result = await resend.emails.send({
           from: FROM_EMAIL,
           to: businessEmail,
           subject: `New Hire Request: ${input.name}`,
@@ -146,10 +149,13 @@ This message was sent from the Linchry Events rent-an-item page.
             <p><small>This message was sent from the Linchry Events rent-an-item page.</small></p>
           `,
         });
+        console.log("Hire request email sent successfully:", result);
       } catch (err) {
-        console.error("Failed to send email via Resend:", err);
+        console.error("Failed to send hire request email:", err);
         // Continue to store in DB even if email fails
       }
+    } else {
+      console.warn("RESEND_API_KEY not set - emails will not be sent");
     }
 
     // Store in database as hire request
