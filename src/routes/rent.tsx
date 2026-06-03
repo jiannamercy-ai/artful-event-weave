@@ -33,7 +33,7 @@ type RentalItem = {
 
 function RentPage() {
   const { data: s } = useSiteSettings();
-  const email = s?.email || "hello@linchryevents.com";
+  const email = s?.email || "linchryevents@gmail.com";
   const whatsapp = s?.whatsapp || "+254700000000";
   const instagram = s?.instagram || "linchryevents";
 

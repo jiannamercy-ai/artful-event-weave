@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-const BUSINESS_EMAIL = "hello@linchryevents.com"; // Will be overridden by settings
+const BUSINESS_EMAIL = "linchryevents@gmail.com"; // Will be overridden by settings
 
 interface ContactSubmission {
   name: string;
