@@ -359,9 +359,6 @@ function FeaturedWork() {
       : FALLBACK_PORTFOLIO;
 
   const stripRef = useRef<HTMLDivElement>(null);
-  const scroll = (dir: 1 | -1) => {
-    stripRef.current?.scrollBy({ left: dir * 440, behavior: "smooth" });
-  };
   
   return (
     <section id="portfolio" className="relative bg-[var(--cream)] py-24 md:py-32 px-6">
@@ -373,31 +370,16 @@ function FeaturedWork() {
         </div>
 
         <div className="relative">
-          <button
-            onClick={() => scroll(-1)}
-            aria-label="Previous"
-            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-11 w-11 items-center justify-center bg-[var(--amber-gold)] text-[var(--espresso)] rounded-full hover:brightness-95"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => scroll(1)}
-            aria-label="Next"
-            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-11 w-11 items-center justify-center bg-[var(--amber-gold)] text-[var(--espresso)] rounded-full hover:brightness-95"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
-
           <div
             ref={stripRef}
-            className="no-scrollbar flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory px-6 md:px-0 pb-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {items.map((p) => (
               <Link
                 key={p.slug}
                 to="/portfolio/$slug"
                 params={{ slug: p.slug }}
-                className="group relative flex-shrink-0 snap-start w-[80vw] sm:w-[60vw] md:w-[400px] h-[420px] sm:h-[460px] md:h-[520px] overflow-hidden"
+                className="group relative overflow-hidden aspect-[4/5]"
               >
                 <img
                   src={p.img}
