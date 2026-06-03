@@ -1,7 +1,7 @@
 
 -- Lock admin-only write policies to the single admin account (defense in depth)
 DO $$
-DECLARE adm text := 'admin@dencyah.local';
+DECLARE adm text := 'admin@linchry.local';
 BEGIN
   -- inquiries
   EXECUTE 'DROP POLICY IF EXISTS "auth delete inquiries" ON public.inquiries';

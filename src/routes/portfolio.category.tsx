@@ -5,7 +5,7 @@ import { usePortfolio } from "@/lib/site";
 import { Mail, MessageCircle, Instagram, ArrowLeft } from "lucide-react";
 import { useSiteSettings, emailUrl, whatsappUrl, instagramUrl } from "@/lib/site";
 
-export const Route = createFileRoute("/portfolio/$category")({
+export const Route = createFileRoute("/portfolio/category")({
   head: (opts) => ({
     meta: [
       { title: `${opts.params.category} Portfolio — Linchry Events` },

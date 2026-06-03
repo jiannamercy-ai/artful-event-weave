@@ -13,6 +13,7 @@ import { Route as WeddingsRouteImport } from './routes/weddings'
 import { Route as TestimonialsRouteImport } from './routes/testimonials'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as RentRouteImport } from './routes/rent'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as MeetTheTeamRouteImport } from './routes/meet-the-team'
@@ -23,14 +24,17 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as PortfolioCategoryRouteImport } from './routes/portfolio.category'
 import { Route as PortfolioSlugRouteImport } from './routes/portfolio.$slug'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin/testimonials'
 import { Route as AdminTeamRouteImport } from './routes/admin/team'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminServicesRouteImport } from './routes/admin/services'
 import { Route as AdminSectionsRouteImport } from './routes/admin/sections'
+import { Route as AdminRentalsRouteImport } from './routes/admin/rentals'
 import { Route as AdminPortfolioRouteImport } from './routes/admin/portfolio'
 import { Route as AdminInquiriesRouteImport } from './routes/admin/inquiries'
+import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 
 const WeddingsRoute = WeddingsRouteImport.update({
   id: '/weddings',
@@ -50,6 +54,11 @@ const TermsRoute = TermsRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RentRoute = RentRouteImport.update({
+  id: '/rent',
+  path: '/rent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -102,6 +111,11 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ServicesRoute,
 } as any)
+const PortfolioCategoryRoute = PortfolioCategoryRouteImport.update({
+  id: '/category',
+  path: '/category',
+  getParentRoute: () => PortfolioRoute,
+} as any)
 const PortfolioSlugRoute = PortfolioSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -132,6 +146,11 @@ const AdminSectionsRoute = AdminSectionsRouteImport.update({
   path: '/sections',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRentalsRoute = AdminRentalsRouteImport.update({
+  id: '/rentals',
+  path: '/rentals',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPortfolioRoute = AdminPortfolioRouteImport.update({
   id: '/portfolio',
   path: '/portfolio',
@@ -140,6 +159,11 @@ const AdminPortfolioRoute = AdminPortfolioRouteImport.update({
 const AdminInquiriesRoute = AdminInquiriesRouteImport.update({
   id: '/inquiries',
   path: '/inquiries',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -152,18 +176,22 @@ export interface FileRoutesByFullPath {
   '/meet-the-team': typeof MeetTheTeamRoute
   '/portfolio': typeof PortfolioRouteWithChildren
   '/privacy': typeof PrivacyRoute
+  '/rent': typeof RentRoute
   '/services': typeof ServicesRouteWithChildren
   '/terms': typeof TermsRoute
   '/testimonials': typeof TestimonialsRoute
   '/weddings': typeof WeddingsRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/inquiries': typeof AdminInquiriesRoute
   '/admin/portfolio': typeof AdminPortfolioRoute
+  '/admin/rentals': typeof AdminRentalsRoute
   '/admin/sections': typeof AdminSectionsRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/portfolio/$slug': typeof PortfolioSlugRoute
+  '/portfolio/category': typeof PortfolioCategoryRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -175,18 +203,22 @@ export interface FileRoutesByTo {
   '/meet-the-team': typeof MeetTheTeamRoute
   '/portfolio': typeof PortfolioRouteWithChildren
   '/privacy': typeof PrivacyRoute
+  '/rent': typeof RentRoute
   '/services': typeof ServicesRouteWithChildren
   '/terms': typeof TermsRoute
   '/testimonials': typeof TestimonialsRoute
   '/weddings': typeof WeddingsRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/inquiries': typeof AdminInquiriesRoute
   '/admin/portfolio': typeof AdminPortfolioRoute
+  '/admin/rentals': typeof AdminRentalsRoute
   '/admin/sections': typeof AdminSectionsRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/portfolio/$slug': typeof PortfolioSlugRoute
+  '/portfolio/category': typeof PortfolioCategoryRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -200,18 +232,22 @@ export interface FileRoutesById {
   '/meet-the-team': typeof MeetTheTeamRoute
   '/portfolio': typeof PortfolioRouteWithChildren
   '/privacy': typeof PrivacyRoute
+  '/rent': typeof RentRoute
   '/services': typeof ServicesRouteWithChildren
   '/terms': typeof TermsRoute
   '/testimonials': typeof TestimonialsRoute
   '/weddings': typeof WeddingsRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/inquiries': typeof AdminInquiriesRoute
   '/admin/portfolio': typeof AdminPortfolioRoute
+  '/admin/rentals': typeof AdminRentalsRoute
   '/admin/sections': typeof AdminSectionsRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/portfolio/$slug': typeof PortfolioSlugRoute
+  '/portfolio/category': typeof PortfolioCategoryRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -226,18 +262,22 @@ export interface FileRouteTypes {
     | '/meet-the-team'
     | '/portfolio'
     | '/privacy'
+    | '/rent'
     | '/services'
     | '/terms'
     | '/testimonials'
     | '/weddings'
+    | '/admin/categories'
     | '/admin/inquiries'
     | '/admin/portfolio'
+    | '/admin/rentals'
     | '/admin/sections'
     | '/admin/services'
     | '/admin/settings'
     | '/admin/team'
     | '/admin/testimonials'
     | '/portfolio/$slug'
+    | '/portfolio/category'
     | '/services/$slug'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -249,18 +289,22 @@ export interface FileRouteTypes {
     | '/meet-the-team'
     | '/portfolio'
     | '/privacy'
+    | '/rent'
     | '/services'
     | '/terms'
     | '/testimonials'
     | '/weddings'
+    | '/admin/categories'
     | '/admin/inquiries'
     | '/admin/portfolio'
+    | '/admin/rentals'
     | '/admin/sections'
     | '/admin/services'
     | '/admin/settings'
     | '/admin/team'
     | '/admin/testimonials'
     | '/portfolio/$slug'
+    | '/portfolio/category'
     | '/services/$slug'
     | '/admin'
   id:
@@ -273,18 +317,22 @@ export interface FileRouteTypes {
     | '/meet-the-team'
     | '/portfolio'
     | '/privacy'
+    | '/rent'
     | '/services'
     | '/terms'
     | '/testimonials'
     | '/weddings'
+    | '/admin/categories'
     | '/admin/inquiries'
     | '/admin/portfolio'
+    | '/admin/rentals'
     | '/admin/sections'
     | '/admin/services'
     | '/admin/settings'
     | '/admin/team'
     | '/admin/testimonials'
     | '/portfolio/$slug'
+    | '/portfolio/category'
     | '/services/$slug'
     | '/admin/'
   fileRoutesById: FileRoutesById
@@ -298,6 +346,7 @@ export interface RootRouteChildren {
   MeetTheTeamRoute: typeof MeetTheTeamRoute
   PortfolioRoute: typeof PortfolioRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
+  RentRoute: typeof RentRoute
   ServicesRoute: typeof ServicesRouteWithChildren
   TermsRoute: typeof TermsRoute
   TestimonialsRoute: typeof TestimonialsRoute
@@ -332,6 +381,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rent': {
+      id: '/rent'
+      path: '/rent'
+      fullPath: '/rent'
+      preLoaderRoute: typeof RentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -404,6 +460,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof ServicesRoute
     }
+    '/portfolio/category': {
+      id: '/portfolio/category'
+      path: '/category'
+      fullPath: '/portfolio/category'
+      preLoaderRoute: typeof PortfolioCategoryRouteImport
+      parentRoute: typeof PortfolioRoute
+    }
     '/portfolio/$slug': {
       id: '/portfolio/$slug'
       path: '/$slug'
@@ -446,6 +509,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSectionsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/rentals': {
+      id: '/admin/rentals'
+      path: '/rentals'
+      fullPath: '/admin/rentals'
+      preLoaderRoute: typeof AdminRentalsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/portfolio': {
       id: '/admin/portfolio'
       path: '/portfolio'
@@ -460,12 +530,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInquiriesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminInquiriesRoute: typeof AdminInquiriesRoute
   AdminPortfolioRoute: typeof AdminPortfolioRoute
+  AdminRentalsRoute: typeof AdminRentalsRoute
   AdminSectionsRoute: typeof AdminSectionsRoute
   AdminServicesRoute: typeof AdminServicesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -475,8 +554,10 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCategoriesRoute: AdminCategoriesRoute,
   AdminInquiriesRoute: AdminInquiriesRoute,
   AdminPortfolioRoute: AdminPortfolioRoute,
+  AdminRentalsRoute: AdminRentalsRoute,
   AdminSectionsRoute: AdminSectionsRoute,
   AdminServicesRoute: AdminServicesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
@@ -489,10 +570,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PortfolioRouteChildren {
   PortfolioSlugRoute: typeof PortfolioSlugRoute
+  PortfolioCategoryRoute: typeof PortfolioCategoryRoute
 }
 
 const PortfolioRouteChildren: PortfolioRouteChildren = {
   PortfolioSlugRoute: PortfolioSlugRoute,
+  PortfolioCategoryRoute: PortfolioCategoryRoute,
 }
 
 const PortfolioRouteWithChildren = PortfolioRoute._addFileChildren(
@@ -520,6 +603,7 @@ const rootRouteChildren: RootRouteChildren = {
   MeetTheTeamRoute: MeetTheTeamRoute,
   PortfolioRoute: PortfolioRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
+  RentRoute: RentRoute,
   ServicesRoute: ServicesRouteWithChildren,
   TermsRoute: TermsRoute,
   TestimonialsRoute: TestimonialsRoute,
