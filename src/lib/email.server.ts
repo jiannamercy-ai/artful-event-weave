@@ -1,7 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { Resend } from "resend";
 
-const BUSINESS_EMAIL = "linchryevents@gmail.com"; // Will be overridden by settings
+const resend = new Resend(process.env.RESEND_API_KEY);
+const BUSINESS_EMAIL = "linchryevents@gmail.com";
+const FROM_EMAIL = "noreply@linchryevents.com"; // Will need to be verified in Resend
 
 interface ContactSubmission {
   name: string;
@@ -57,10 +60,32 @@ ${input.message}
 This message was sent from the Linchry Events website contact form.
     `.trim();
 
-    // In production, integrate with SendGrid, Resend, or similar
-    // For now, we'll just log and store in DB
-    console.log("Contact Email to:", businessEmail);
-    console.log(emailBody);
+    // Send email via Resend
+    if (process.env.RESEND_API_KEY) {
+      try {
+        await resend.emails.send({
+          from: FROM_EMAIL,
+          to: businessEmail,
+          subject: `New Event Inquiry: ${input.name}`,
+          text: emailBody,
+          html: `
+            <h2>New Event Inquiry</h2>
+            <p><strong>Name:</strong> ${input.name}</p>
+            <p><strong>Email:</strong> ${input.email || "Not provided"}</p>
+            <p><strong>Phone:</strong> ${input.phone || "Not provided"}</p>
+            <p><strong>Event Type:</strong> ${input.event_type || "Not specified"}</p>
+            <p><strong>Event Date:</strong> ${input.event_date || "Not specified"}</p>
+            <h3>Message:</h3>
+            <p>${input.message.replace(/\n/g, "<br/>")}</p>
+            <hr>
+            <p><small>This message was sent from the Linchry Events website contact form.</small></p>
+          `,
+        });
+      } catch (err) {
+        console.error("Failed to send email via Resend:", err);
+        // Continue to store in DB even if email fails
+      }
+    }
 
     // Store in database as inquiry
     const { error } = await supabaseAdmin.from("inquiries").insert({
@@ -102,10 +127,33 @@ ${input.notes || "None"}
 This message was sent from the Linchry Events rent-an-item page.
     `.trim();
 
-    // In production, integrate with SendGrid, Resend, or similar
-    // For now, we'll just log and store in DB
-    console.log("Hire Request Email to:", businessEmail);
-    console.log(emailBody);
+    // Send email via Resend
+    if (process.env.RESEND_API_KEY) {
+      try {
+        await resend.emails.send({
+          from: FROM_EMAIL,
+          to: businessEmail,
+          subject: `New Hire Request: ${input.name}`,
+          text: emailBody,
+          html: `
+            <h2>New Hire Request</h2>
+            <p><strong>Name:</strong> ${input.name}</p>
+            <p><strong>Phone:</strong> ${input.phone}</p>
+            <p><strong>Email:</strong> ${input.email}</p>
+            <p><strong>Event Date:</strong> ${input.event_date || "Not specified"}</p>
+            <h3>Items Interested In:</h3>
+            <p>${(input.items_interested || "Not specified").replace(/\n/g, "<br/>")}</p>
+            <h3>Additional Notes:</h3>
+            <p>${(input.notes || "None").replace(/\n/g, "<br/>")}</p>
+            <hr>
+            <p><small>This message was sent from the Linchry Events rent-an-item page.</small></p>
+          `,
+        });
+      } catch (err) {
+        console.error("Failed to send email via Resend:", err);
+        // Continue to store in DB even if email fails
+      }
+    }
 
     // Store in database as hire request
     const { error } = await supabaseAdmin.from("hire_requests").insert({
