@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
-import { ensureAdminUser, ADMIN_EMAIL } from "@/lib/admin.functions";
+import { ensureAdminUser } from "@/lib/admin.functions";
 import { toast } from "sonner";
 
 const CLICK_WINDOW = 3000;
@@ -12,7 +12,7 @@ const REQUIRED_CLICKS = 3;
 
 export function AdminTrigger() {
   const [open, setOpen] = useState(false);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const clicks = useRef<number[]>([]);
@@ -32,16 +32,11 @@ export function AdminTrigger() {
     e.preventDefault();
     setBusy(true);
     try {
-      // Map username → admin email
-      const normalized = username.trim().toLowerCase();
-      const isAdminUser = normalized === "lichry" || normalized === "admin";
-      const email = isAdminUser ? ADMIN_EMAIL : username.trim();
-
-      // First attempt sign-in
+      // Sign in with email and password directly
       let { error } = await supabase.auth.signInWithPassword({ email, password });
 
-      // If invalid credentials and using default lichry/123456L, try to bootstrap then retry
-      if (error && isAdminUser && password === "123456L") {
+      // If invalid credentials, try to bootstrap then retry
+      if (error) {
         await ensureAdmin();
         const retry = await supabase.auth.signInWithPassword({ email, password });
         error = retry.error;
@@ -103,10 +98,11 @@ export function AdminTrigger() {
                 <div className="border-b border-[var(--border)]">
                   <input
                     autoFocus
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Username"
-                    autoComplete="username"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    autoComplete="email"
                     className="w-full bg-transparent py-2 outline-none text-[var(--espresso)] placeholder:text-[var(--taupe)]"
                   />
                 </div>
