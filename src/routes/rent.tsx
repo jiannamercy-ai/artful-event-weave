@@ -227,13 +227,16 @@ function HireRequestForm() {
         notes: (formData.get("notes") as string) || undefined,
       });
 
-      if (result.success) {
+      if (result && result.success) {
         toast.success(result.message);
         setSubmitted(true);
         (e.target as HTMLFormElement).reset();
         setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        toast.error(result?.message || "Failed to submit request");
       }
     } catch (error) {
+      console.error("Hire request submission error:", error);
       toast.error(error instanceof Error ? error.message : "Failed to submit request");
     } finally {
       setLoading(false);

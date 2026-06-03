@@ -123,13 +123,16 @@ function ContactForm() {
         message: formData.get("message") as string,
       });
 
-      if (result.success) {
+      if (result && result.success) {
         toast.success(result.message);
         setSubmitted(true);
         (e.target as HTMLFormElement).reset();
         setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        toast.error(result?.message || "Failed to send message");
       }
     } catch (error) {
+      console.error("Contact form submission error:", error);
       toast.error(error instanceof Error ? error.message : "Failed to send message");
     } finally {
       setLoading(false);

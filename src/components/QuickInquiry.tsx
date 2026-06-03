@@ -111,6 +111,7 @@ export function QuickInquiry() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       maxLength={100}
+                      autoComplete="name"
                       placeholder="Your name"
                       className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
                     />
@@ -121,6 +122,7 @@ export function QuickInquiry() {
                       value={contact}
                       onChange={(e) => setContact(e.target.value)}
                       maxLength={255}
+                      autoComplete="email"
                       placeholder="Phone or email"
                       className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
                     />
