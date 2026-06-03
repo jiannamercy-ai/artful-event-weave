@@ -151,6 +151,7 @@ function ContactForm() {
           required
           type="text"
           name="name"
+          autoComplete="name"
           maxLength={120}
           placeholder="Your name"
           className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
@@ -160,6 +161,7 @@ function ContactForm() {
         <input
           type="email"
           name="email"
+          autoComplete="email"
           maxLength={254}
           placeholder="Email"
           className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
@@ -169,6 +171,7 @@ function ContactForm() {
         <input
           type="tel"
           name="phone"
+          autoComplete="tel"
           maxLength={40}
           placeholder="Phone"
           className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
@@ -177,6 +180,7 @@ function ContactForm() {
       <div className="border-b border-[var(--taupe)]/20">
         <select
           name="event_type"
+          autoComplete="off"
           className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] text-[var(--espresso)]"
         >
           <option value="">Event Type (optional)</option>
@@ -191,6 +195,7 @@ function ContactForm() {
         <input
           type="date"
           name="event_date"
+          autoComplete="off"
           className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
         />
       </div>
@@ -198,6 +203,7 @@ function ContactForm() {
         <textarea
           required
           name="message"
+          autoComplete="off"
           rows={3}
           maxLength={4000}
           placeholder="Tell us about your event..."

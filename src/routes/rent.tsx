@@ -261,6 +261,7 @@ function HireRequestForm() {
             required
             type="text"
             name="name"
+            autoComplete="name"
             placeholder="Your name"
             className="w-full bg-transparent py-3 text-[var(--espresso)] placeholder-[var(--taupe)]/60 outline-none"
           />
@@ -271,6 +272,7 @@ function HireRequestForm() {
             required
             type="email"
             name="email"
+            autoComplete="email"
             placeholder="Email address"
             className="w-full bg-transparent py-3 text-[var(--espresso)] placeholder-[var(--taupe)]/60 outline-none"
           />
@@ -281,6 +283,7 @@ function HireRequestForm() {
             required
             type="tel"
             name="phone"
+            autoComplete="tel"
             placeholder="Phone number"
             className="w-full bg-transparent py-3 text-[var(--espresso)] placeholder-[var(--taupe)]/60 outline-none"
           />
@@ -290,6 +293,7 @@ function HireRequestForm() {
           <input
             type="date"
             name="event_date"
+            autoComplete="off"
             placeholder="Event date"
             className="w-full bg-transparent py-3 text-[var(--espresso)] placeholder-[var(--taupe)]/60 outline-none"
           />
@@ -298,6 +302,7 @@ function HireRequestForm() {
         <div className="border-b border-[var(--taupe)]/20">
           <textarea
             name="items_interested"
+            autoComplete="off"
             placeholder="Items you're interested in..."
             rows={3}
             className="w-full bg-transparent py-3 text-[var(--espresso)] placeholder-[var(--taupe)]/60 outline-none resize-none"
@@ -307,6 +312,7 @@ function HireRequestForm() {
         <div className="border-b border-[var(--taupe)]/20">
           <textarea
             name="notes"
+            autoComplete="off"
             placeholder="Additional notes (optional)"
             rows={3}
             className="w-full bg-transparent py-3 text-[var(--espresso)] placeholder-[var(--taupe)]/60 outline-none resize-none"
