@@ -666,6 +666,7 @@ function TestimonialCard({
 function Contact() {
   const { data: s } = useSiteSettings();
   const [busy, setBusy] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
