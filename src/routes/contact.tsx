@@ -8,10 +8,10 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Linchry Events" },
+      { title: "Contact — Linchry Events" },
       {
         name: "description",
-        content: "Get in touch with Linchry Events. Tell us about your event and we'll guide you through the process.",
+        content: "Tell us about your event and we'll guide you from there. Contact Linchry Events to start planning your exceptional event.",
       },
     ],
   }),
@@ -116,16 +116,17 @@ function ContactForm() {
     const name = formData.get("name") as string;
     const email = (formData.get("email") as string) || "";
     const phone = (formData.get("phone") as string) || "";
-    const event_type = (formData.get("event_type") as string) || "";
     const event_date = (formData.get("event_date") as string) || "";
-    const message = formData.get("message") as string;
+    const guest_count = (formData.get("guest_count") as string) || "";
+    const venue = (formData.get("venue") as string) || "";
+    const event_type = (formData.get("event_type") as string) || "";
+    const budget_range = (formData.get("budget_range") as string) || "";
+    const message = (formData.get("message") as string) || "";
 
-    const whatsappMessage = `*Event Inquiry from Linchry Events Website*
+    const whatsappMessage = `*Event Proposal Request from Linchry Events Website*
 
 *Name:* ${name}
-${email ? `*Email:* ${email}\n` : ""}${phone ? `*Phone:* ${phone}\n` : ""}${event_type ? `*Event Type:* ${event_type}\n` : ""}${event_date ? `*Event Date:* ${event_date}\n` : ""}
-*Message:*
-${message}`;
+${email ? `*Email:* ${email}\n` : ""}${phone ? `*Phone:* ${phone}\n` : ""}${event_date ? `*Event Date:* ${event_date}\n` : ""}${guest_count ? `*Guest Count:* ${guest_count}\n` : ""}${venue ? `*Venue:* ${venue}\n` : ""}${event_type ? `*Event Type:* ${event_type}\n` : ""}${budget_range ? `*Budget Range:* ${budget_range}\n` : ""}${message ? `*Additional Details:*\n${message}` : ""}`;
 
     const url = whatsappUrl(whatsapp, whatsappMessage);
     window.location.href = url;
@@ -141,7 +142,17 @@ ${message}`;
           name="name"
           autoComplete="name"
           maxLength={120}
-          placeholder="Your name"
+          placeholder="Name"
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
+        />
+      </div>
+      <div className="border-b border-[var(--taupe)]/20">
+        <input
+          type="tel"
+          name="phone"
+          autoComplete="tel"
+          maxLength={40}
+          placeholder="Phone"
           className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
         />
       </div>
@@ -157,11 +168,29 @@ ${message}`;
       </div>
       <div className="border-b border-[var(--taupe)]/20">
         <input
-          type="tel"
-          name="phone"
-          autoComplete="tel"
-          maxLength={40}
-          placeholder="Phone"
+          type="date"
+          name="event_date"
+          autoComplete="off"
+          placeholder="Event Date"
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
+        />
+      </div>
+      <div className="border-b border-[var(--taupe)]/20">
+        <input
+          type="number"
+          name="guest_count"
+          min="1"
+          maxLength={6}
+          placeholder="Guest Count"
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
+        />
+      </div>
+      <div className="border-b border-[var(--taupe)]/20">
+        <input
+          type="text"
+          name="venue"
+          maxLength={255}
+          placeholder="Venue"
           className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
         />
       </div>
@@ -169,32 +198,38 @@ ${message}`;
         <select
           name="event_type"
           autoComplete="off"
+          defaultValue=""
           className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] text-[var(--espresso)]"
         >
-          <option value="">Event Type (optional)</option>
+          <option value="">Event Type</option>
           <option>Wedding</option>
           <option>Corporate Event</option>
           <option>Private Celebration</option>
-          <option>Funeral</option>
           <option>Other</option>
         </select>
       </div>
       <div className="border-b border-[var(--taupe)]/20">
-        <input
-          type="date"
-          name="event_date"
+        <select
+          name="budget_range"
           autoComplete="off"
-          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]"
-        />
+          defaultValue=""
+          className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] text-[var(--espresso)]"
+        >
+          <option value="">Budget Range</option>
+          <option>Under 500K</option>
+          <option>500K - 1M</option>
+          <option>1M - 2.5M</option>
+          <option>2.5M - 5M</option>
+          <option>5M+</option>
+        </select>
       </div>
       <div className="border-b border-[var(--taupe)]/20">
         <textarea
-          required
           name="message"
           autoComplete="off"
           rows={3}
           maxLength={4000}
-          placeholder="Tell us about your event..."
+          placeholder="Additional details..."
           className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] resize-none"
         />
       </div>
@@ -203,7 +238,7 @@ ${message}`;
         disabled={loading}
         className="w-full gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] py-4 text-xs uppercase tracking-[0.24em] mt-2 hover:brightness-95 disabled:opacity-50 transition-opacity"
       >
-        {loading ? "Opening WhatsApp..." : "Send via WhatsApp"}
+        {loading ? "Opening WhatsApp..." : "Submit Inquiry"}
       </button>
     </form>
   );

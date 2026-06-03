@@ -182,7 +182,7 @@ function Hero({ ready }: { ready: boolean }) {
             href="#contact"
             className="gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] hover:brightness-95"
           >
-            Get Started
+            Request a Proposal
           </a>
         </motion.div>
       </div>
@@ -675,11 +675,15 @@ function Contact() {
     const name = String(fd.get("name") || "").trim();
     const email = String(fd.get("email") || "").trim() || "";
     const phone = String(fd.get("phone") || "").trim() || "";
+    const event_date = String(fd.get("event_date") || "").trim() || "";
+    const guest_count = String(fd.get("guest_count") || "").trim() || "";
+    const venue = String(fd.get("venue") || "").trim() || "";
     const event_type = String(fd.get("event_type") || "").trim() || "";
-    const message = String(fd.get("message") || "").trim();
+    const budget_range = String(fd.get("budget_range") || "").trim() || "";
+    const message = String(fd.get("message") || "").trim() || "";
 
-    if (!name || !message) {
-      toast.error("Please fill in your name and a short message.");
+    if (!name) {
+      toast.error("Please fill in your name.");
       return;
     }
     setBusy(true);
@@ -688,9 +692,7 @@ function Contact() {
     const whatsappMessage = `*Event Proposal Request from Linchry Events Website*
 
 *Name:* ${name}
-${email ? `*Email:* ${email}\n` : ""}${phone ? `*Phone:* ${phone}\n` : ""}${event_type ? `*Event Type:* ${event_type}\n` : ""}
-*Message:*
-${message}`;
+${email ? `*Email:* ${email}\n` : ""}${phone ? `*Phone:* ${phone}\n` : ""}${event_date ? `*Event Date:* ${event_date}\n` : ""}${guest_count ? `*Guest Count:* ${guest_count}\n` : ""}${venue ? `*Venue:* ${venue}\n` : ""}${event_type ? `*Event Type:* ${event_type}\n` : ""}${budget_range ? `*Budget Range:* ${budget_range}\n` : ""}${message ? `*Message:*\n${message}` : ""}`;
 
     const url = whatsappUrl(whatsapp_num, whatsappMessage);
     setSent(true);
@@ -757,7 +759,11 @@ ${message}`;
           {!sent ? (
             <form onSubmit={onSubmit} className="space-y-5">
               <div className="thread-field border-b border-[var(--border)]">
-                <input required type="text" name="name" maxLength={120} placeholder="Your name"
+                <input required type="text" name="name" maxLength={120} placeholder="Name"
+                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
+              </div>
+              <div className="thread-field border-b border-[var(--border)]">
+                <input type="tel" name="phone" maxLength={40} placeholder="Phone"
                   className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
               </div>
               <div className="thread-field border-b border-[var(--border)]">
@@ -765,10 +771,17 @@ ${message}`;
                   className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
               </div>
               <div className="thread-field border-b border-[var(--border)]">
-                <input type="tel" name="phone" maxLength={40} placeholder="Phone"
+                <input type="date" name="event_date" placeholder="Event Date"
                   className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
               </div>
-
+              <div className="thread-field border-b border-[var(--border)]">
+                <input type="number" name="guest_count" min="1" maxLength={6} placeholder="Guest Count"
+                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
+              </div>
+              <div className="thread-field border-b border-[var(--border)]">
+                <input type="text" name="venue" maxLength={255} placeholder="Venue"
+                  className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)]" />
+              </div>
               <div className="thread-field border-b border-[var(--border)]">
                 <select name="event_type" defaultValue="" className="w-full bg-transparent py-3 outline-none text-[var(--taupe)]">
                   <option value="" disabled>Event Type</option>
@@ -778,10 +791,19 @@ ${message}`;
                   <option>Other</option>
                 </select>
               </div>
-
               <div className="thread-field border-b border-[var(--border)]">
-                <textarea required name="message" rows={3} maxLength={4000}
-                  placeholder="Tell us about your event..."
+                <select name="budget_range" defaultValue="" className="w-full bg-transparent py-3 outline-none text-[var(--taupe)]">
+                  <option value="" disabled>Budget Range</option>
+                  <option>Under 500K</option>
+                  <option>500K - 1M</option>
+                  <option>1M - 2.5M</option>
+                  <option>2.5M - 5M</option>
+                  <option>5M+</option>
+                </select>
+              </div>
+              <div className="thread-field border-b border-[var(--border)]">
+                <textarea name="message" rows={3} maxLength={4000}
+                  placeholder="Additional details..."
                   className="w-full bg-transparent py-3 outline-none placeholder:text-[var(--taupe)] resize-none" />
               </div>
 

@@ -53,7 +53,12 @@ function InquiriesAdmin() {
               </div>
               <p className="text-xs text-neutral-400">{new Date(i.created_at).toLocaleString()}</p>
             </div>
-            <p className="mt-3 whitespace-pre-wrap text-sm text-neutral-700">{i.message}</p>
+            <div className="mt-3 grid grid-cols-2 gap-3 rounded-md bg-neutral-50 p-3 text-xs md:grid-cols-4">
+              {i.guest_count && <div><span className="font-semibold text-neutral-600">Guests:</span> {i.guest_count}</div>}
+              {i.venue && <div><span className="font-semibold text-neutral-600">Venue:</span> {i.venue}</div>}
+              {i.budget_range && <div><span className="font-semibold text-neutral-600">Budget:</span> {i.budget_range}</div>}
+            </div>
+            {i.message && <p className="mt-3 whitespace-pre-wrap text-sm text-neutral-700">{i.message}</p>}
             <div className="mt-4 flex justify-end gap-2">
               <button onClick={() => markRead(i.id, !i.read)} className="inline-flex items-center gap-1 text-xs px-3 py-1.5 border border-neutral-200 rounded">
                 <Check className="h-3.5 w-3.5" /> Mark {i.read ? "unread" : "read"}
