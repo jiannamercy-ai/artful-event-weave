@@ -152,7 +152,7 @@ This message was sent from the Linchry Events rent-an-item page.
     }
 
     // Store in database as hire request
-    const { error } = await supabaseAdmin.from("hire_requests").insert({
+    const { error } = await supabaseAdmin.from("hire_requests" as any).insert({
       name: input.name,
       phone: input.phone,
       email: input.email,
