@@ -30,7 +30,6 @@ import {
   whatsappUrl,
   emailUrl,
 } from "@/lib/site";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 import heroImg from "@/assets/hero.jpg";
@@ -183,7 +182,7 @@ function Hero({ ready }: { ready: boolean }) {
             href="#contact"
             className="gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] px-7 py-3.5 text-xs uppercase tracking-[0.24em] hover:brightness-95"
           >
-            Request a Proposal
+            Get Started
           </a>
         </motion.div>
       </div>
@@ -666,38 +665,34 @@ function TestimonialCard({
 
 function Contact() {
   const { data: s } = useSiteSettings();
-  const [sent, setSent] = useState(false);
-  const [pulsing, setPulsing] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (busy) return;
     const fd = new FormData(e.currentTarget);
-    const payload = {
-      name: String(fd.get("name") || "").trim(),
-      email: String(fd.get("email") || "").trim() || null,
-      phone: String(fd.get("phone") || "").trim() || null,
-      event_type: String(fd.get("event_type") || "").trim() || null,
-      message: String(fd.get("message") || "").trim(),
-    };
-    if (!payload.name || !payload.message) {
+    const name = String(fd.get("name") || "").trim();
+    const email = String(fd.get("email") || "").trim() || "";
+    const phone = String(fd.get("phone") || "").trim() || "";
+    const event_type = String(fd.get("event_type") || "").trim() || "";
+    const message = String(fd.get("message") || "").trim();
+
+    if (!name || !message) {
       toast.error("Please fill in your name and a short message.");
       return;
     }
     setBusy(true);
-    setPulsing(true);
-    const { error } = await supabase.from("inquiries").insert(payload);
-    setBusy(false);
-    if (error) {
-      setPulsing(false);
-      toast.error("Could not send. Please try again or use WhatsApp.");
-      return;
-    }
-    setTimeout(() => {
-      setSent(true);
-      setPulsing(false);
-    }, 500);
+
+    const whatsapp_num = s?.whatsapp || "+254700000000";
+    const whatsappMessage = `*Event Proposal Request from Linchry Events Website*
+
+*Name:* ${name}
+${email ? `*Email:* ${email}\n` : ""}${phone ? `*Phone:* ${phone}\n` : ""}${event_type ? `*Event Type:* ${event_type}\n` : ""}
+*Message:*
+${message}`;
+
+    const url = whatsappUrl(whatsapp_num, whatsappMessage);
+    window.location.href = url;
   };
 
   const email = s?.email || "hello@linchryevents.com";
@@ -757,25 +752,7 @@ function Contact() {
           className="relative bg-white p-7 md:p-10 shadow-[0_15px_60px_-25px_rgba(60,42,36,0.35)] overflow-hidden"
           style={{ border: "1px solid color-mix(in oklab, var(--amber-gold) 40%, transparent)" }}
         >
-          {pulsing && (
-            <motion.span
-              initial={{ scale: 0, opacity: 0.6 }}
-              animate={{ scale: 8, opacity: 0 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute left-1/2 bottom-10 -translate-x-1/2 h-24 w-24 rounded-full bg-[var(--amber-gold)]/40 pointer-events-none"
-            />
-          )}
-
-          {sent ? (
-            <div className="py-10 text-center">
-              <span className="gold-rule mx-auto block" />
-              <h3 className="mt-5 font-serif text-2xl text-[var(--espresso)]">Your vision has been received.</h3>
-              <p className="mt-3 text-sm text-[var(--taupe)]">
-                We'll respond within 24 hours — usually sooner.
-              </p>
-              <div className="mt-6 mx-auto h-px w-12 bg-[var(--amber-gold)]" />
-            </div>
-          ) : (
+          {!sent ? (
             <form onSubmit={onSubmit} className="space-y-5">
               <div className="thread-field border-b border-[var(--border)]">
                 <input required type="text" name="name" maxLength={120} placeholder="Your name"
@@ -813,7 +790,7 @@ function Contact() {
                 transition={{ duration: 0.4 }}
                 className="w-full gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] py-4 text-xs uppercase tracking-[0.24em] mt-2 disabled:opacity-60"
               >
-                {busy ? "Sending…" : "Request a Proposal"}
+                {busy ? "Opening WhatsApp…" : "Send via WhatsApp"}
               </motion.button>
             </form>
           )}

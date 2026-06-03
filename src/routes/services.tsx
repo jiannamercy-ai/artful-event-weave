@@ -222,7 +222,7 @@ function Services() {
               to="/contact"
               className="inline-block gold-sweep bg-[var(--amber-gold)] text-[var(--espresso)] px-8 py-3.5 text-xs uppercase tracking-[0.24em] hover:brightness-95"
             >
-              Request a Proposal
+              Get a Quote
             </Link>
             <p className="mt-6 text-[var(--champagne)]/90 text-sm leading-relaxed">
               Our team will review your requirements and get back to you with a customized proposal within 24 hours.
