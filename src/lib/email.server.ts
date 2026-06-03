@@ -3,7 +3,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const BUSINESS_EMAIL = "linchryevents@gmail.com";
+const BUSINESS_EMAIL = "jannesokumu20@gmail.com";
 const FROM_EMAIL = "noreply@linchryevents.com"; // Will need to be verified in Resend
 
 interface ContactSubmission {
